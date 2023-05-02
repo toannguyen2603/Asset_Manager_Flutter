@@ -1,4 +1,4 @@
-import 'package:asset_manager_flutter/src/screens/authentication/view/sign_in/sign_in.dart';
+import 'package:asset_manager_flutter/src/splash_view.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatefulWidget {
@@ -13,7 +13,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInScreen(),
+      home: SplashView(),
     );
   }
 }
