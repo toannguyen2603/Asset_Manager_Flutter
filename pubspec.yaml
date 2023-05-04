@@ -38,6 +38,7 @@ dependencies:
 
   # state management 
   flutter_riverpod: ^2.3.6
+  flutter_animate: ^4.1.1+1
   # navigator 
 
 dev_dependencies:
