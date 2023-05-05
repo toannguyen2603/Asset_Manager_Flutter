@@ -48,11 +48,8 @@ class _CustomTextInputState extends State<ATextField> {
         controller: widget.textEditController,
         decoration: InputDecoration(
           hintText: widget.hintTextString as String,
-          // errorText: _isValidate ? null : validationMessage,
+          errorText: _isValidate ? null : validationMessage,
           counterText: '',
-          // border: getBorder(),
-          // enabledBorder: widget.enableBorder ? getBorder() : InputBorder.none,
-          // focusedBorder: widget.enableBorder ? getBorder() : InputBorder.none,
           labelText: widget.labelText ?? widget.hintTextString as String,
           labelStyle: getTextStyle(),
           prefixIcon: widget.prefixIcon ?? getPrefixIcon(),
