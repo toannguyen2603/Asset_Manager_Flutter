@@ -39,11 +39,25 @@ dependencies:
   # state management 
   flutter_riverpod: ^2.3.6
   flutter_animate: ^4.1.1+1
+
+  # generator json
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.1
+  
   # navigator 
 
+  # loading button
+  rounded_loading_button: ^2.1.0
+
+  # flush bar
+  another_flushbar: ^1.12.29
+
 dev_dependencies:
+  build_runner: ^2.3.3
   flutter_test:
     sdk: flutter
+  freezed: ^2.3.3
+  json_serializable: ^6.6.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -51,6 +65,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
 flutter_lints: ^2.0.1
+freezed: ^2.3.2
+json_serializable: ^6.5.4
+flutter_launcher_icons: ^0.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
