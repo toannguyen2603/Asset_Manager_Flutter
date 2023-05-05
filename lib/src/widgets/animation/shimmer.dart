@@ -19,7 +19,7 @@ class Shimmer extends StatelessWidget {
         ShimmerEffect(
           curve: Curves.easeOutCubic,
           // color: Colors.purple,
-          colors: [PColors.loading, Colors.white, PColors.loading],
+          colors: [AColors.loading, Colors.white, AColors.loading],
           duration: Duration(seconds: 2),
         )
       ],

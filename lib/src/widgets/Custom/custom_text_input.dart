@@ -1,25 +1,27 @@
+import 'package:asset_manager_flutter/src/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../constaints/export_constraints.dart';
 
 class ATextField extends StatefulWidget {
   const ATextField(
       {required this.hintTextString,
       required this.textEditController,
       required this.inputType,
-      this.enableBorder = true,
       this.themeColor,
       this.cornerRadius,
       this.maxLength,
       this.prefixIcon,
       this.textColor,
       this.errorMessage,
-      this.labelText});
+      this.labelText,
+      this.suffixIcon});
 
   // ignore: prefer_typing_uninitialized_variables
   final hintTextString;
   final TextEditingController? textEditController;
   final InputType? inputType;
-  final bool enableBorder;
   final Color? themeColor;
   final double? cornerRadius;
   final int? maxLength;
@@ -27,6 +29,7 @@ class ATextField extends StatefulWidget {
   final Color? textColor;
   final String? errorMessage;
   final String? labelText;
+  final Widget? suffixIcon;
 
   @override
   _CustomTextInputState createState() => _CustomTextInputState();
@@ -48,12 +51,14 @@ class _CustomTextInputState extends State<ATextField> {
         controller: widget.textEditController,
         decoration: InputDecoration(
           hintText: widget.hintTextString as String,
-          errorText: _isValidate ? null : validationMessage,
+          // errorText: _isValidate ? null : validationMessage,
           counterText: '',
-          labelText: widget.labelText ?? widget.hintTextString as String,
           labelStyle: getTextStyle(),
           prefixIcon: widget.prefixIcon ?? getPrefixIcon(),
-          suffixIcon: getSuffixIcon(),
+          suffixIcon: widget.suffixIcon ?? getSuffixIcon(),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AColors.lightGrey, width: 1.8),
+          ),
         ),
         onChanged: checkValidation,
         keyboardType: getInputType(),
@@ -66,17 +71,6 @@ class _CustomTextInputState extends State<ATextField> {
     );
   }
 
-  //get border of text input filed
-  OutlineInputBorder getBorder() {
-    return OutlineInputBorder(
-      borderRadius:
-          BorderRadius.all(Radius.circular(widget.cornerRadius ?? 12.0)),
-      borderSide: BorderSide(
-          width: 2, color: widget.themeColor ?? Theme.of(context).primaryColor),
-      gapPadding: 2,
-    );
-  }
-
   // formatter on basis of text input type
   TextInputFormatter getFormatter() {
     return TextInputFormatter.withFunction((oldValue, newValue) => newValue);
@@ -84,8 +78,7 @@ class _CustomTextInputState extends State<ATextField> {
 
   // text style for text input
   TextStyle getTextStyle() {
-    return TextStyle(
-        color: widget.themeColor ?? Theme.of(context).primaryColor);
+    return TextStyle(color: widget.themeColor ?? AColors.lightGrey);
   }
 
   // input validations
@@ -142,26 +135,21 @@ class _CustomTextInputState extends State<ATextField> {
   Icon getPrefixIcon() {
     switch (widget.inputType) {
       case InputType.Default:
-        return Icon(
-          Icons.person,
-          color: widget.themeColor ?? Theme.of(context).primaryColor,
-        );
+        return getIcon(Icons.person);
       case InputType.Email:
-        return Icon(
-          Icons.email,
-          color: widget.themeColor ?? Theme.of(context).primaryColor,
-        );
+        return getIcon(Icons.email);
       case InputType.Password:
-        return Icon(
-          Icons.lock,
-          color: widget.themeColor ?? Theme.of(context).primaryColor,
-        );
+        return getIcon(Icons.lock);
       default:
-        return Icon(
-          Icons.person,
-          color: widget.themeColor ?? Theme.of(context).primaryColor,
-        );
+        return getIcon(Icons.person);
     }
+  }
+
+  Icon getIcon(IconData icon) {
+    return Icon(
+      icon,
+      color: widget.themeColor ?? AColors.lightGrey,
+    );
   }
 
   // get suffix icon
@@ -174,11 +162,27 @@ class _CustomTextInputState extends State<ATextField> {
         },
         icon: Icon(
           visibility ? Icons.visibility : Icons.visibility_off,
-          color: widget.themeColor ?? Theme.of(context).primaryColor,
+          color: widget.themeColor ?? AColors.lightGrey,
+          size: UiParameters.iconSize,
         ),
       );
     } else {
-      return const Opacity(opacity: 0, child: Icon(Icons.phone));
+      if (widget.textEditController!.text.length > 0) {
+        return IconButton(
+          onPressed: () {
+            setState(() {
+              widget.textEditController!.clear();
+            });
+          },
+          icon: Icon(
+            Icons.cancel,
+            color: widget.themeColor ?? AColors.lightGrey,
+            size: UiParameters.iconSize,
+          ),
+        );
+      } else {
+        return const Opacity(opacity: 0, child: Icon(Icons.phone));
+      }
     }
   }
 }

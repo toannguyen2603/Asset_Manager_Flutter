@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class PColors {
-  static const primaryColor = Color(0XFF5FC6DC);
+class AColors {
+  static const primaryColor = Color(0XFF298DCA);
   static const secondColor = Color(0XFFFBCB8A);
   static const textColor = Color(0XFF0C0B09);
+  static const lightGrey = Color(0XFFadadad);
   static const shimmerGradient = LinearGradient(
     colors: [
       Color(0XFFEBEBF4),
