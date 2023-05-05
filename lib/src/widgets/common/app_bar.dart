@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../constaints/ui_paramester.dart';
+import '../../constaints/export_constraints.dart';
 
 class PAppBar extends StatelessWidget implements PreferredSizeWidget {
 

@@ -17,13 +17,13 @@ class SplashView extends ConsumerWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          gradient: PColors.splashGradient,
+          gradient: AColors.splashGradient,
         ),
         child: Center(
           child: Text('Logo',
               style: PStyle.poppins(context)?.copyWith(
                   fontSize: 50,
-                  color: PColors.textColor,
+                  color: AColors.textColor,
                   fontWeight: FontWeight.bold)),
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class UiParameters {
-  static const iconSize = 28.0;
+  static const iconSize = 20.0;
   static const screenPadding = EdgeInsets.symmetric(horizontal: 16.0);
   static const rowContentPadding = EdgeInsets.all(16.0);
 
@@ -42,5 +42,4 @@ class UiParameters {
     horizontal: 16.0,
     vertical: 8.0,
   );
-
 }
