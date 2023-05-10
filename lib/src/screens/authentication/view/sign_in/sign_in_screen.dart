@@ -1,27 +1,30 @@
 import 'dart:async';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:asset_manager_flutter/gen/assets.gen.dart';
 import 'package:asset_manager_flutter/src/constaints/app_sizes.dart';
-import 'package:asset_manager_flutter/src/widgets/Custom/custom_text_input.dart';
+import 'package:asset_manager_flutter/src/themes/colors.dart';
+import 'package:asset_manager_flutter/src/widgets/custom/custom_text_input.dart';
 import 'package:asset_manager_flutter/src/widgets/common/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class SignInScreen extends ConsumerWidget {
+class SignInScreen extends ConsumerStatefulWidget {
+  const SignInScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _signInButtonController =
       RoundedLoadingButtonController();
 
-  void _doSomething(RoundedLoadingButtonController controller) async {
-    Timer(Duration(seconds: 3), () {
-      controller.reset();
-    });
-  }
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return LScaffold(
       body: SizedBox.expand(
         child: SingleChildScrollView(
@@ -37,12 +40,12 @@ class SignInScreen extends ConsumerWidget {
                   )),
               ATextField(
                 textEditController: _emailController,
-                hintTextString: 'Enter Email',
-                inputType: InputType.Email,
+                hintTextString: 'Enter Username',
+                inputType: InputType.Default,
                 cornerRadius: 5.0,
                 maxLength: 24,
               ),
-              Gaps.h20,
+              Gaps.h16,
               ATextField(
                 textEditController: _passwordController,
                 hintTextString: 'Enter Password',
@@ -55,13 +58,25 @@ class SignInScreen extends ConsumerWidget {
                 padding: EdgeInsets.only(right: 20),
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                    onPressed: () => {}, child: const Text('Forgot password')),
+                    style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    onPressed: () => {print('Click forgot password')},
+                    child: const Text('Forgot password')),
               ),
-              Gaps.h24,
+              Gaps.h16,
               RoundedLoadingButton(
                 controller: _signInButtonController,
-                onPressed: () {
-                  _doSomething(_signInButtonController);
+                onPressed: () async => {
+                  
+                  await Flushbar(
+                    message: 'Login success',
+                    duration: Duration(seconds: 1),
+                    icon: Icon(Icons.check),
+                    backgroundColor: AColors.greenColor,
+                  ).show(context),
+                  _signInButtonController.stop(),
+                  _signInButtonController.reset()
                 },
                 child: Text('Login'),
                 borderRadius: 50,
