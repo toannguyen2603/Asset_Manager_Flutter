@@ -16,7 +16,8 @@ class ATextField extends StatefulWidget {
       this.textColor,
       this.errorMessage,
       this.labelText,
-      this.suffixIcon});
+      this.suffixIcon,
+      this.textInputAction});
 
   // ignore: prefer_typing_uninitialized_variables
   final hintTextString;
@@ -30,6 +31,7 @@ class ATextField extends StatefulWidget {
   final String? errorMessage;
   final String? labelText;
   final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
 
   @override
   _CustomTextInputState createState() => _CustomTextInputState();
@@ -67,6 +69,7 @@ class _CustomTextInputState extends State<ATextField> {
           color: widget.textColor ?? Colors.black,
         ),
         inputFormatters: [getFormatter()],
+        textInputAction: widget.textInputAction ?? getInputAction(),
       ),
     );
   }
@@ -150,6 +153,15 @@ class _CustomTextInputState extends State<ATextField> {
       icon,
       color: widget.themeColor ?? AColors.lightGrey,
     );
+  }
+
+  // get input action keyboard
+  TextInputAction getInputAction() {
+    if (widget.inputType == InputType.Default) {
+      return TextInputAction.next;
+    } else {
+      return TextInputAction.done;
+    }
   }
 
   // get suffix icon

@@ -1,19 +1,19 @@
-import 'package:asset_manager_flutter/src/splash_view.dart';
+import 'package:asset_manager_flutter/src/router/coordinatior.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MyApp extends StatefulWidget {
+import 'themes/themes.dart';
+
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(goRouterProvider);
+    return MaterialApp.router(
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: SplashView(),
+      routerConfig: router,
     );
   }
 }

@@ -5,9 +5,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+  AssetGenImage get logo_splash => const AssetGenImage('assets/images/logo_splash.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [logo];
+  List<AssetGenImage> get values => [logo, logo_splash];
 }
 
 class Assets {
