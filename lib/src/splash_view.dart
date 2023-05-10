@@ -5,6 +5,8 @@ import 'package:asset_manager_flutter/src/themes/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../gen/assets.gen.dart';
+
 class SplashView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,11 +22,12 @@ class SplashView extends ConsumerWidget {
           gradient: AColors.splashGradient,
         ),
         child: Center(
-          child: Text('Logo',
-              style: PStyle.poppins(context)?.copyWith(
-                  fontSize: 50,
-                  color: AColors.textColor,
-                  fontWeight: FontWeight.bold)),
+          child: Image.asset(
+            Assets.images.logo_splash.path,
+            fit: BoxFit.cover,
+            width: 140,
+            height: 90,
+          ),
         ),
       ),
     );
