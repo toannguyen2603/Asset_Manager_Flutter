@@ -5,6 +5,7 @@ class AColors {
   static const secondColor = Color(0XFFFBCB8A);
   static const textColor = Color(0XFF0C0B09);
   static const lightGrey = Color(0XFFadadad);
+  static const greenColor = Color(0XFF228B22);
   static const shimmerGradient = LinearGradient(
     colors: [
       Color(0XFFEBEBF4),
