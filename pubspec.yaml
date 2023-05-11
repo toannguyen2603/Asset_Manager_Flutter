@@ -56,6 +56,12 @@ dependencies:
   # Inspectors http request
   dio: ^5.1.1
 
+  # scanner qr code
+  mobile_scanner: ^3.2.0
+
+  # image picker 
+  image_picker: ^0.8.7+4
+
   # Helper
   font_awesome_flutter: ^10.4.0
 
