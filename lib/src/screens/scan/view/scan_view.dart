@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:asset_manager_flutter/src/constaints/app_sizes.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
 import 'package:asset_manager_flutter/src/themes/styles.dart';
@@ -15,12 +17,16 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView>
     with SingleTickerProviderStateMixin {
-  BarcodeCapture? barcode;
-
+  BarcodeCapture? capture;
   MobileScannerController controller = MobileScannerController();
 
-  bool isStarted = true;
   double _zoomFactor = 0.0;
+
+  Future<void> onDetect(BarcodeCapture barcode) async {
+    setState(() {
+      this.capture = barcode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +46,19 @@ class _ScannerViewState extends State<ScannerView>
       ),
       body: SafeArea(
           child: Container(
-        color: AColors.primaryColor,
         child: Stack(children: [
-          MobileScanner(
-            controller: controller,
-            scanWindow: Rect.fromCenter(
-                center: Offset(10, 10), width: 100.0, height: 100.0),
-            onDetect: (barcode) {
-              setState(() {
-                this.barcode = barcode;
-              });
-            },
+          MobileScanner(controller: controller, onDetect: onDetect),
+          Positioned.fill(
+            child: Container(
+              decoration: ShapeDecoration(
+                color: Colors.amber.shade300,
+                shape: QrScannerOverlayShape(
+                  borderColor: Colors.white,
+                  borderLength: 20,
+                  borderWidth: 4,
+                ),
+              ),
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -60,6 +68,8 @@ class _ScannerViewState extends State<ScannerView>
               child: Column(
                 children: [
                   Slider(
+                    activeColor: Colors.white,
+                    inactiveColor: Colors.grey,
                     value: _zoomFactor,
                     onChanged: (value) {
                       setState(() {
@@ -157,6 +167,186 @@ class _ScannerViewState extends State<ScannerView>
           )
         ]),
       )),
+    );
+  }
+}
+
+class QrScannerOverlayShape extends ShapeBorder {
+  QrScannerOverlayShape({
+    this.borderColor = Colors.red,
+    this.borderWidth = 3.0,
+    this.overlayColor = const Color.fromRGBO(0, 0, 0, 80),
+    this.borderRadius = 0,
+    this.borderLength = 40,
+    double? cutOutSize,
+    double? cutOutWidth,
+    double? cutOutHeight,
+    this.cutOutBottomOffset = 0,
+  })  : cutOutWidth = cutOutWidth ?? cutOutSize ?? 250,
+        cutOutHeight = cutOutHeight ?? cutOutSize ?? 250 {
+    assert(
+      borderLength <=
+          min(this.cutOutWidth, this.cutOutHeight) / 2 + borderWidth * 2,
+      "Border can't be larger than ${min(this.cutOutWidth, this.cutOutHeight) / 2 + borderWidth * 2}",
+    );
+    assert(
+        (cutOutWidth == null && cutOutHeight == null) ||
+            (cutOutSize == null && cutOutWidth != null && cutOutHeight != null),
+        'Use only cutOutWidth and cutOutHeight or only cutOutSize');
+  }
+
+  final Color borderColor;
+  final double borderLength;
+  final double borderRadius;
+  final double borderWidth;
+  final double cutOutBottomOffset;
+  final double cutOutHeight;
+  final double cutOutWidth;
+  final Color overlayColor;
+
+  @override
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.all(10);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    return Path()
+      ..fillType = PathFillType.evenOdd
+      ..addPath(getOuterPath(rect), Offset.zero);
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    Path getLeftTopPath(Rect rect) {
+      return Path()
+        ..moveTo(rect.left, rect.bottom)
+        ..lineTo(rect.left, rect.top)
+        ..lineTo(rect.right, rect.top);
+    }
+
+    return getLeftTopPath(rect)
+      ..lineTo(
+        rect.right,
+        rect.bottom,
+      )
+      ..lineTo(
+        rect.left,
+        rect.bottom,
+      )
+      ..lineTo(
+        rect.left,
+        rect.top,
+      );
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    final width = rect.width;
+    final borderWidthSize = width / 2;
+    final height = rect.height;
+    final borderOffset = borderWidth / 2;
+    final mBorderLength =
+        borderLength > min(cutOutHeight, cutOutHeight) / 2 + borderWidth * 2
+            ? borderWidthSize / 2
+            : borderLength;
+    final mCutOutWidth =
+        cutOutWidth < width ? cutOutWidth : width - borderOffset;
+    final mCutOutHeight =
+        cutOutHeight < height ? cutOutHeight : height - borderOffset;
+
+    final backgroundPaint = Paint()
+      ..color = overlayColor
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    final boxPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.fill
+      ..blendMode = BlendMode.dstOut;
+
+    final cutOutRect = Rect.fromLTWH(
+      rect.left + width / 2 - mCutOutWidth / 2 + borderOffset,
+      -cutOutBottomOffset +
+          rect.top +
+          height / 2 -
+          mCutOutHeight / 2 +
+          borderOffset,
+      mCutOutWidth - borderOffset * 2,
+      mCutOutHeight - borderOffset * 2,
+    );
+
+    canvas
+      ..saveLayer(
+        rect,
+        backgroundPaint,
+      )
+      ..drawRect(
+        rect,
+        backgroundPaint,
+      )
+      // Draw top right corner
+      ..drawRRect(
+        RRect.fromLTRBAndCorners(
+          cutOutRect.right - mBorderLength,
+          cutOutRect.top,
+          cutOutRect.right,
+          cutOutRect.top + mBorderLength,
+          topRight: Radius.circular(borderRadius),
+        ),
+        borderPaint,
+      )
+      // Draw top left corner
+      ..drawRRect(
+        RRect.fromLTRBAndCorners(
+          cutOutRect.left,
+          cutOutRect.top,
+          cutOutRect.left + mBorderLength,
+          cutOutRect.top + mBorderLength,
+          topLeft: Radius.circular(borderRadius),
+        ),
+        borderPaint,
+      )
+      // Draw bottom right corner
+      ..drawRRect(
+        RRect.fromLTRBAndCorners(
+          cutOutRect.right - mBorderLength,
+          cutOutRect.bottom - mBorderLength,
+          cutOutRect.right,
+          cutOutRect.bottom,
+          bottomRight: Radius.circular(borderRadius),
+        ),
+        borderPaint,
+      )
+      // Draw bottom left corner
+      ..drawRRect(
+        RRect.fromLTRBAndCorners(
+          cutOutRect.left,
+          cutOutRect.bottom - mBorderLength,
+          cutOutRect.left + mBorderLength,
+          cutOutRect.bottom,
+          bottomLeft: Radius.circular(borderRadius),
+        ),
+        borderPaint,
+      )
+      ..drawRRect(
+        RRect.fromRectAndRadius(
+          cutOutRect,
+          Radius.circular(borderRadius),
+        ),
+        boxPaint,
+      )
+      ..restore();
+  }
+
+  @override
+  ShapeBorder scale(double t) {
+    return QrScannerOverlayShape(
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      overlayColor: overlayColor,
     );
   }
 }
