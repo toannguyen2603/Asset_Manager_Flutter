@@ -5,19 +5,21 @@ import 'package:flutter/services.dart';
 import '../../constaints/export_constraints.dart';
 
 class ATextField extends StatefulWidget {
-  const ATextField(
-      {required this.hintTextString,
-      required this.textEditController,
-      required this.inputType,
-      this.themeColor,
-      this.cornerRadius,
-      this.maxLength,
-      this.prefixIcon,
-      this.textColor,
-      this.errorMessage,
-      this.labelText,
-      this.suffixIcon,
-      this.textInputAction});
+  const ATextField({
+    required this.hintTextString,
+    required this.textEditController,
+    required this.inputType,
+    this.themeColor,
+    this.cornerRadius,
+    this.maxLength,
+    this.prefixIcon,
+    this.textColor,
+    this.errorMessage,
+    this.labelText,
+    this.suffixIcon,
+    this.textInputAction,
+    this.errorText,
+  });
 
   // ignore: prefer_typing_uninitialized_variables
   final hintTextString;
@@ -32,6 +34,7 @@ class ATextField extends StatefulWidget {
   final String? labelText;
   final Widget? suffixIcon;
   final TextInputAction? textInputAction;
+  final String? errorText;
 
   @override
   _CustomTextInputState createState() => _CustomTextInputState();
@@ -39,8 +42,6 @@ class ATextField extends StatefulWidget {
 
 // input text state
 class _CustomTextInputState extends State<ATextField> {
-  bool _isValidate = true;
-  String validationMessage = '';
   bool visibility = false;
   int oldTextSize = 0;
 
@@ -53,7 +54,7 @@ class _CustomTextInputState extends State<ATextField> {
         controller: widget.textEditController,
         decoration: InputDecoration(
           hintText: widget.hintTextString as String,
-          // errorText: _isValidate ? null : validationMessage,
+          errorText: widget.errorText,
           counterText: '',
           labelStyle: getTextStyle(),
           prefixIcon: widget.prefixIcon ?? getPrefixIcon(),
@@ -62,7 +63,6 @@ class _CustomTextInputState extends State<ATextField> {
             borderSide: BorderSide(color: AColors.lightGrey, width: 1.8),
           ),
         ),
-        onChanged: checkValidation,
         keyboardType: getInputType(),
         obscureText: widget.inputType == InputType.Password && !visibility,
         style: TextStyle(
@@ -82,30 +82,6 @@ class _CustomTextInputState extends State<ATextField> {
   // text style for text input
   TextStyle getTextStyle() {
     return TextStyle(color: widget.themeColor ?? AColors.lightGrey);
-  }
-
-  // input validations
-  void checkValidation(String textFieldValue) {
-    if (widget.inputType == InputType.Default) {
-      //default
-      _isValidate = textFieldValue.isNotEmpty;
-      validationMessage = widget.errorMessage ?? 'Filed cannot be empty';
-    } else if (widget.inputType == InputType.Email) {
-      //email validation
-      _isValidate = RegExp(
-              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-          .hasMatch(textFieldValue);
-      validationMessage = widget.errorMessage ?? 'Email is not valid';
-    } else if (widget.inputType == InputType.Password) {
-      //password validation
-      _isValidate = RegExp(
-              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-          .hasMatch(textFieldValue);
-      validationMessage = widget.errorMessage ?? 'Password is not valid';
-    }
-    oldTextSize = textFieldValue.length;
-    //change value in state
-    setState(() {});
   }
 
   // return input type for setting keyboard

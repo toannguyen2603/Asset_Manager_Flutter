@@ -2,7 +2,6 @@ import 'package:asset_manager_flutter/src/constaints/app_sizes.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
 import 'package:asset_manager_flutter/src/themes/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -32,6 +31,7 @@ class _ScannerViewState extends State<ScannerView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: Text(
           'Scanner',
           style: PStyle.poppins(context)!.copyWith(
@@ -40,12 +40,11 @@ class _ScannerViewState extends State<ScannerView>
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),
       body: SafeArea(
           child: Container(
+        margin: EdgeInsets.all(10),
         child: Stack(children: [
           MobileScanner(controller: controller, onDetect: onDetect),
           Positioned.fill(
@@ -168,4 +167,3 @@ class _ScannerViewState extends State<ScannerView>
     );
   }
 }
-

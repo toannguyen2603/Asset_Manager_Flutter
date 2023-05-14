@@ -9,11 +9,8 @@ class ProfileView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return LScaffold(
-        appBar: PAppBar(
-          title: Text('Profile'),
-        ),
         body: SingleChildScrollView(
-          child: Column(),
-        ));
+      child: Column(),
+    ));
   }
 }
