@@ -52,18 +52,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     ref.listen<DataState>(authNotifier, (_, state) {
       state.maybeWhen(
-        success: (user) => Navigator.pushReplacementNamed(
-          context,
-          '/home',
-        ),
+        success: (user) {
+          final showError = ASnackBar.success(content: 'Login success');
+          ScaffoldMessenger.of(context).showSnackBar(showError);
+        },
         error: (err, _) {
-          final showError = ASnackBar.failure(errorMessage: 'Login failure');
+          final showError = ASnackBar.failure(errorMessage: err.toString());
           ScaffoldMessenger.of(context).showSnackBar(showError);
         },
-        orElse: () {
-          final showError = ASnackBar.failure(errorMessage: 'Login failure');
-          ScaffoldMessenger.of(context).showSnackBar(showError);
-        },
+        orElse: () {},
       );
     });
 

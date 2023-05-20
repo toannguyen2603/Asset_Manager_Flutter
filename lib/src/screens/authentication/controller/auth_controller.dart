@@ -15,7 +15,11 @@ class AuthController extends StateNotifier<DataState> {
         credentials['userName'],
         credentials['password'],
       );
-      state = DataState.success(data: user);
+      if (user.message.isEmpty) {
+        state = DataState.success(data: user);
+      } else {
+        state = DataState.error(message: user.message.toString());
+      }
     } catch (e) {
       state = DataState.error(message: e.toString());
     }

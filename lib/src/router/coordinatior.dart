@@ -9,11 +9,12 @@ import 'navigation_items.dart';
 
 enum ARoutes { signIn, home, scanner, forgotPassword, profile, history }
 
-final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
+final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {  
   return GoRouter(
     navigatorKey: ACoordinator.navigatorKey,
     debugLogDiagnostics: true,
-    initialLocation: '/home',
+    initialLocation: '/login',
+
     routes: [
       GoRoute(
           name: ARoutes.signIn.name,

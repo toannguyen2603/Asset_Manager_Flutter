@@ -20,10 +20,12 @@ class ASnackBar {
         duration: const Duration(milliseconds: 1000),
       );
   static SnackBar success({required String content}) => SnackBar(
+        backgroundColor: _colorScheme.primary,
         content: Text(
           content,
           style: _textStyle?.copyWith(color: _colorScheme.onPrimary),
         ),
+        duration: const Duration(milliseconds: 1000),
       );
 
   static SnackBar warning({required String content}) => SnackBar(
