@@ -1,5 +1,6 @@
 import 'package:asset_manager_flutter/gen/assets.gen.dart';
 import 'package:asset_manager_flutter/src/constaints/app_sizes.dart';
+import 'package:asset_manager_flutter/src/screens/scan/view/scan_view.dart';
 import 'package:asset_manager_flutter/src/widgets/common/snack_bars.dart';
 import 'package:asset_manager_flutter/src/widgets/custom/custom_text_input.dart';
 import 'package:asset_manager_flutter/src/widgets/common/scaffold.dart';
@@ -52,9 +53,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     ref.listen<DataState>(authNotifier, (_, state) {
       state.maybeWhen(
-        success: (user) {
+        success: (user) async {
           final showError = ASnackBar.success(content: 'Login success');
           ScaffoldMessenger.of(context).showSnackBar(showError);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ScannerView(),
+            ),
+          );
         },
         error: (err, _) {
           final showError = ASnackBar.failure(errorMessage: err.toString());
@@ -62,7 +69,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         },
         orElse: () {},
       );
-    });
+    }); 
 
     return LScaffold(
       body: SizedBox.expand(
