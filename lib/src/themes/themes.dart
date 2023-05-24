@@ -28,6 +28,7 @@ class ATheme {
         subThemesData: subThemesData,
       );
 
+
   static FlexSubThemesData get subThemesData => const FlexSubThemesData(
         inputDecoratorBorderType: FlexInputBorderType.underline,
         segmentedButtonSchemeColor: SchemeColor.inversePrimary,

@@ -1,19 +1,33 @@
 import 'dart:async';
 import 'package:asset_manager_flutter/src/screens/authentication/view/sign_in/sign_in_screen.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
-import 'package:asset_manager_flutter/src/themes/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../gen/assets.gen.dart';
 
-class SplashView extends ConsumerWidget {
+class SplashView extends StatefulWidget {
+  const SplashView({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Timer(const Duration(seconds: 2), () {
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateLogin();
+  }
+
+  _navigateLogin() async {
+    await Future.delayed(Duration(milliseconds: 1500), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => SignInScreen()));
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,

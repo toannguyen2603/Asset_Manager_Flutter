@@ -5,12 +5,11 @@ import '../../../widgets/state/data_state.dart';
 import '../service/auth_service.dart';
 import 'auth_controller.dart';
 
-const String baseUrl = 'https://localhost:7150/';
+const String baseUrl = 'https://localhost:7150';
 
-final isSignedInProvider = Provider<Dio>((ref) => Dio(BaseOptions(headers: {
-      'accept': 'text/plain',
-      'Content-Type': 'application/json-patch+json'
-    }, baseUrl: baseUrl)));
+final isSignedInProvider = Provider<Dio>((ref) => Dio(
+  BaseOptions(baseUrl: baseUrl),
+));
 
 final authServiceProvider = Provider<AuthService>(
   (ref) => AuthService(ref.read(isSignedInProvider)),
@@ -19,4 +18,3 @@ final authServiceProvider = Provider<AuthService>(
 final authNotifier = StateNotifierProvider<AuthController, DataState>(
   (ref) => AuthController(ref.read(authServiceProvider)),
 );
-
