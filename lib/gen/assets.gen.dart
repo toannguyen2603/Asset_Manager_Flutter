@@ -16,6 +16,15 @@ class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
+class $AssetsLottiesGen {
+  const $AssetsLottiesGen();
+
+  /// File path: assets/lotties/empty.json
+  String get empty => 'assets/lotties/loading.json';
+
+}
+
+
 class AssetGenImage {
   const AssetGenImage(this._assetName);
 

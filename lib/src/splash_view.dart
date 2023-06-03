@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:asset_manager_flutter/src/screens/authentication/view/sign_in/sign_in_screen.dart';
+import 'package:asset_manager_flutter/src/screens/scan/view/scan_view.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _SplashViewState extends State<SplashView> {
   _navigateLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SignInScreen()));
+          context, MaterialPageRoute(builder: (context) => ScannerView()));
     });
   }
 

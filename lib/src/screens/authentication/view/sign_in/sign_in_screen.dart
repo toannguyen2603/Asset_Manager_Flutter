@@ -54,14 +54,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     ref.listen<DataState>(authNotifier, (_, state) {
       state.maybeWhen(
         success: (user) async {
-          final showError = ASnackBar.success(content: 'Login success');
-          ScaffoldMessenger.of(context).showSnackBar(showError);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ScannerView(),
-            ),
-          );
+          final showSuccessfulMsg = ASnackBar.success(content: 'Login success');
+          ScaffoldMessenger.of(context).showSnackBar(showSuccessfulMsg);
+          login();
         },
         error: (err, _) {
           final showError = ASnackBar.failure(errorMessage: err.toString());
@@ -69,7 +64,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         },
         orElse: () {},
       );
-    }); 
+    });
 
     return LScaffold(
       body: SizedBox.expand(
@@ -118,5 +113,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> login() async {
+    await new Future.delayed(Duration(milliseconds: 3000), () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ScannerView(),
+        ),
+      );
+    });
   }
 }

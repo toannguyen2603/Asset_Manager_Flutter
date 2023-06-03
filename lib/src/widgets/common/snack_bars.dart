@@ -15,7 +15,6 @@ class ASnackBar {
           content,
           style: TextStyle(color: Colors.black),
         ),
-        duration: const Duration(milliseconds: 1000),
       );
 
   static SnackBar warning({required String content}) => SnackBar(

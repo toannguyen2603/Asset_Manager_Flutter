@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 class AColors {
   static const primaryColor = Color(0XFF298DCA);
   static const secondColor = Color(0XFFFBCB8A);
-  static const textColor = Color(0XFF0C0B09);
+  static const background = Color(0xFFF2F3F8);
   static const lightGrey = Color(0XFFadadad);
   static const greenColor = Color(0XFF228B22);
+  static const white = Color(0xFFFFFFFF);
+  
+
+  static const textColor = Color(0XFF0C0B09);
+  static const darkText = Color(0xFF253840);
+  static const lightText = Color(0xFF4A6572);
+
   static const shimmerGradient = LinearGradient(
     colors: [
       Color(0XFFEBEBF4),
