@@ -1,7 +1,5 @@
-import 'dart:io';
-
+import 'package:asset_manager_flutter/env.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 
 import '../model/auth_user.dart';
 
@@ -10,19 +8,13 @@ class AuthService {
 
   AuthService(this._dio);
 
-  Future<LAuthUser> login(String userName, String password) async {
+  Future<LAuthUser> login(String username, String password) async {
     try {
-      (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
-          (HttpClient dioClient) {
-        dioClient.badCertificateCallback =
-            ((X509Certificate cert, String host, int port) => true);
-        return dioClient;
-      };
       final response = await _dio.post(
-        '/api/Mobile/Login',
+        config.login,
         data: <String, dynamic>{
-          "userName": userName,
-          "password": password,
+          'userName': username,
+          'password': password,
         },
       );
       if (response.statusCode == 200) {
@@ -30,7 +22,7 @@ class AuthService {
       } else {
         throw Exception('An error occurred');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw Exception(e.response!.data['error_description']);
     } catch (e) {
       throw Exception("Couldn't login. Is the device online?");

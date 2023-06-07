@@ -12,7 +12,7 @@ class AuthController extends StateNotifier<DataState> {
     state = const DataState.loading();
     try {
       final user = await _authService.login(
-        credentials['userName'],
+        credentials['username'],
         credentials['password'],
       );
       if (user.message.isEmpty) {

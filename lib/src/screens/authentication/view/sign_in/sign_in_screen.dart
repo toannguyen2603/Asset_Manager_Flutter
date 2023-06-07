@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import '../../../../utils/form_validator.dart';
 import '../../../../widgets/state/data_state.dart';
 import '../../controller/auth_reponsitory.dart';
 
@@ -19,15 +20,32 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   final RoundedLoadingButtonController _signInButtonController =
       RoundedLoadingButtonController();
+
+// key message
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  void showSnack(String title) {
+    final snackbar = SnackBar(
+        content: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 15,
+      ),
+    ));
+    scaffoldMessengerKey.currentState?.showSnackBar(snackbar);
+  }
 
   bool _isValidate = true;
 
   void _handleUserLogin() {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() {
         _isValidate = false;
       });
@@ -40,7 +58,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       _signInButtonController.reset();
       _signInButtonController.stop();
       Map<String, dynamic> credentials = {
-        'userName': _emailController.text,
+        'username': _usernameController.text,
         'password': _passwordController.text,
       };
       ref.read(authNotifier.notifier).login(credentials);
@@ -55,60 +73,70 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       state.maybeWhen(
         success: (user) async {
           final showSuccessfulMsg = ASnackBar.success(content: 'Login success');
-          ScaffoldMessenger.of(context).showSnackBar(showSuccessfulMsg);
+          scaffoldMessengerKey.currentState?.showSnackBar(showSuccessfulMsg);
           login();
         },
         error: (err, _) {
           final showError = ASnackBar.failure(errorMessage: err.toString());
-          ScaffoldMessenger.of(context).showSnackBar(showError);
+          scaffoldMessengerKey.currentState?.showSnackBar(showError);
         },
         orElse: () {},
       );
     });
 
-    return LScaffold(
-      body: SizedBox.expand(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.all(36.0),
-                  child: Image.asset(
-                    Assets.images.logo.path,
-                    fit: BoxFit.cover,
-                    height: 150,
-                  )),
-              ATextField(
-                textEditController: _emailController,
-                errorText: _isValidate ? null : 'Username cannot be empty',
-                hintTextString: 'Enter Username',
-                inputType: InputType.Default,
-                cornerRadius: 5.0,
-                maxLength: 24,
-              ),
-              Gaps.h16,
-              ATextField(
-                textEditController: _passwordController,
-                errorText: _isValidate ? null : 'Password cannot be empty',
-                hintTextString: 'Enter Password',
-                inputType: InputType.Password,
-                cornerRadius: 5.0,
-                textColor: Colors.black,
-                maxLength: 16,
-              ),
-              Gaps.h16,
-              RoundedLoadingButton(
-                controller: _signInButtonController,
-                onPressed: authState.maybeWhen(
-                  loading: () => null,
-                  orElse: () => _handleUserLogin,
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: LScaffold(
+        body: SizedBox.expand(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(36.0),
+                    child: Image.asset(
+                      Assets.images.logo.path,
+                      fit: BoxFit.cover,
+                      height: 150,
+                    )),
+                ATextField(
+                  textEditController: _usernameController,
+                  errorText: _isValidate
+                      ? null
+                      : FormValidator.validateUserName(
+                          _usernameController.text,
+                        ),
+                  hintTextString: 'Enter Username',
+                  inputType: InputType.Default,
+                  cornerRadius: 5.0,
+                  maxLength: 24,
                 ),
-                child: Text('Login'),
-                borderRadius: 50,
-                height: 48,
-              )
-            ],
+                Gaps.h16,
+                ATextField(
+                  textEditController: _passwordController,
+                  errorText: _isValidate
+                      ? null
+                      : FormValidator.validatePassword(
+                          _passwordController.text),
+                  hintTextString: 'Enter Password',
+                  inputType: InputType.Password,
+                  cornerRadius: 5.0,
+                  textColor: Colors.black,
+                  maxLength: 16,
+                ),
+                Gaps.h16,
+                RoundedLoadingButton(
+                  controller: _signInButtonController,
+                  onPressed: authState.maybeWhen(
+                    loading: () => null,
+                    orElse: () => _handleUserLogin,
+                  ),
+                  child: Text('Login'),
+                  borderRadius: 50,
+                  height: 48,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -116,7 +144,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   Future<void> login() async {
-    await new Future.delayed(Duration(milliseconds: 3000), () {
+    await new Future.delayed(Duration(milliseconds: 1000), () {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -124,5 +152,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         ),
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
