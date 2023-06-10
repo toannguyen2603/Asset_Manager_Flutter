@@ -43,8 +43,8 @@ class FormValidator {
     return value!.isEmpty ? 'Please enter your password' : null;
   }
 
-  static String? validateFullName(String? value) {
-    return value!.isEmpty ? 'Please enter your fullname' : null;
+  static String? validateUserName(String? value) {
+    return value!.isEmpty ? 'Please enter your username' : null;
   }
 
   //validatePasswordConfirmation

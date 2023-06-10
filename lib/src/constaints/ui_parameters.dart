@@ -1,6 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class UiParameters {
+  static double heightAppBar = AppBar().preferredSize.height / 1.5;
+  static Radius cornerRadius = Radius.circular(30);
+  static double paddingSize = 10.0;
   static const iconSize = 20.0;
   static const screenPadding = EdgeInsets.symmetric(horizontal: 16.0);
   static const rowContentPadding = EdgeInsets.all(16.0);

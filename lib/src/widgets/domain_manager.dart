@@ -21,3 +21,4 @@ class DomainManager {
 
 final authNotifier = StateNotifierProvider<AuthController, DataState>(
     (ref) => AuthController(ref.read(authServiceProvider)));
+
