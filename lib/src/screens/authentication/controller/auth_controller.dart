@@ -1,3 +1,4 @@
+import 'package:asset_manager_flutter/src/constaints/role.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../widgets/state/data_state.dart';
@@ -15,10 +16,11 @@ class AuthController extends StateNotifier<DataState> {
         credentials['username'],
         credentials['password'],
       );
-      if (user.message.isEmpty) {
+      if (user.message.isEmpty && user.role == Role.staff) {
         state = DataState.success(data: user);
       } else {
-        state = DataState.error(message: user.message.toString());
+        state = DataState.error(
+            message: 'Username or password is incorrect. Please try again');
       }
     } catch (e) {
       state = DataState.error(message: e.toString());

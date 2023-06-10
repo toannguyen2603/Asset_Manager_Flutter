@@ -12,14 +12,14 @@ import '../../../../utils/form_validator.dart';
 import '../../../../widgets/state/data_state.dart';
 import '../../controller/auth_reponsitory.dart';
 
-class SignInScreen extends ConsumerStatefulWidget {
-  const SignInScreen({super.key});
+class SignInView extends ConsumerStatefulWidget {
+  const SignInView({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends ConsumerState<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInView> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -45,6 +45,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   bool _isValidate = true;
 
   void _handleUserLogin() {
+    FocusScope.of(context).unfocus();
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() {
         _isValidate = false;
@@ -145,7 +146,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   Future<void> login() async {
     await new Future.delayed(Duration(milliseconds: 1000), () {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => ScannerView(),

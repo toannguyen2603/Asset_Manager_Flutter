@@ -1,13 +1,17 @@
+import 'dart:async';
+
+import 'package:asset_manager_flutter/src/screens/asset/service/property_service.dart';
 import 'package:asset_manager_flutter/src/screens/profile/view/profile_view.dart';
+import 'package:asset_manager_flutter/src/themes/colors.dart';
+import 'package:asset_manager_flutter/src/widgets/snack_bar/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../constaints/app_sizes.dart';
-import '../../../themes/colors.dart';
 import '../../../themes/styles.dart';
 import '../../../widgets/common/qr_scanner_overlay_shape.dart';
+import '../../../widgets/state/loading/loading.dart';
 import '../../asset/view/property_view.dart';
 
 class ScannerView extends StatefulWidget {
@@ -19,200 +23,228 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView>
     with SingleTickerProviderStateMixin {
+  // Start code here ....
+  bool isLoading = true; // variable to check state
+  bool _isQrCodeValid = true;
+  bool _isScannerQrCode = false;
+
   BarcodeCapture? capture;
-  MobileScannerController controller = MobileScannerController();
-  bool _isDetect = false;
+  MobileScannerController controller = MobileScannerController(
+    detectionSpeed: DetectionSpeed.noDuplicates,
+    facing: CameraFacing.back,
+    torchEnabled: false,
+  );
+
+  PropertyScanner propertyController = PropertyScanner();
 
   double _zoomFactor = 0.0;
 
-  Future<void> onDetect(BarcodeCapture barcode) async {
-    setState(() {
-      this.capture = barcode;
-      _isDetect = true;
+  loadData() {
+    Timer(Duration(seconds: 5), () {
+      setState(
+        () { 
+          isLoading = false;
+        },
+      );
     });
-    handleScanner();
   }
 
-  Future<void> handleScanner() async {
-    try {
-      if (capture == null) {}
-      final String tag = await capture?.barcodes.first.rawValue ?? 'Unknown';
-      if (!tag.isEmpty) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PropertyScreen(),
-          ),
+  Future<void> onDetect(BarcodeCapture capture) async {
+    setState(() {
+      _isScannerQrCode = true;
+    });
+    final Barcode barcode = capture.barcodes.first;
+    if (barcode.rawValue == null) {
+      // stopCamera();
+      // showBannerSnackBar(
+      //   title: 'Mã không hợp lệ',
+      //   subtitle: 'Vui lòng quét mã khác',
+      //   context: context,
+      //   backgroundColor: Colors.yellow[700],
+      //   onPressed: () {
+      //     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      //     startCamera();
+      //   },
+      //   controller: controller,
+      // );
+    } else {
+      final String code = barcode.rawValue!;
+      if (_isValidQrCode(code)) {
+        _isQrCodeValid = true;
+        stopCamera();
+        notifyClients(code).then(
+          (state) {
+            if (state) {
+              showBannerSnackBar(
+                title: 'Mã không hợp lệ',
+                subtitle: 'Vui lòng quét mã khác',
+                context: context,
+                backgroundColor: Colors.red[700],
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  startCamera();
+                },
+                controller: controller,
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PropertyScreen(
+                    tag: code,
+                  ),
+                ),
+              );
+            }
+          },
+        );
+      } else {
+        stopCamera();
+        showBannerSnackBar(
+          title: 'Mã không hợp lệ',
+          subtitle: 'Vui lòng quét mã khác',
+          context: context,
+          backgroundColor: Colors.yellow[700],
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            startCamera();
+          },
+          controller: controller,
         );
       }
-      print('Tag is: $tag');
-    } on PlatformException catch (err) {}
+    }
+  }
+
+  Future<void> startCamera() async {
+    await controller.start();
+    setState(() {
+      _isScannerQrCode = false;
+    });
+  }
+
+  Future<void> stopCamera() async {
+    await controller.stop();
+    setState(() {
+      _isQrCodeValid = true;
+    });
+  }
+
+  Future<bool> notifyClients(String tag) async {
+    final property = await propertyController.getProperty(tag);
+    if (property.error == true) {
+      return true;
+    }
+    return false;
+  }
+
+  //TODO: Check valid Qrcode
+  bool _isValidQrCode(String code) {
+    String codePattern = r'^[a-zA-Z0-9]{6}$';
+    RegExp regExp = RegExp(codePattern);
+    if (!regExp.hasMatch(code)) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    loadData();
+    startCamera();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final double heightAppBar = AppBar().preferredSize.height * 1.5;
     final double widthScreen = MediaQuery.of(context).size.width;
-    return Container(
-      color: AColors.greenColor,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: FutureBuilder(
-          future: getData(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            } else {
-              return Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          MobileScanner(
-                              // TODO: scanner
-                              controller: controller,
-                              startDelay: true,
-                              onDetect: onDetect),
-                          Positioned.fill(
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                shape: QrScannerOverlayShape(
-                                  borderColor:
-                                      _isDetect ? Colors.yellow : Colors.white,
-                                  borderLength: 20,
-                                  borderWidth: 8,
-                                  borderRadius: 5,
-                                ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: isLoading
+          ? Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: AColors.background,
+              child: Center(
+                child: const LoadingState.large(),
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      MobileScanner(
+                        controller: controller,
+                        startDelay: true,
+                        onDetect: onDetect,
+                      ),
+                      Positioned.fill(
+                        child: Container(
+                          decoration: ShapeDecoration(
+                            shape: QrScannerOverlayShape(
+                              borderColor: _isScannerQrCode
+                                  ? Colors.yellow
+                                  : Colors.white,
+                              borderLength: 20,
+                              borderWidth: 8,
+                              borderRadius: 5,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          alignment: Alignment.bottomLeft,
+                          margin: EdgeInsets.only(left: 15),
+                          height: heightAppBar,
+                          child: profileButton(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          alignment: Alignment.bottomCenter,
+                          height: heightAppBar,
+                          width: widthScreen,
+                          child: appBar(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: 120,
+                          child: Column(
+                            children: [
+                              Slider(
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.grey,
+                                value: _zoomFactor,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _zoomFactor = value;
+                                    controller.setZoomScale(value);
+                                  });
+                                },
                               ),
-                            ),
-                          ),
-                          Align(
-                            // TODO: profile button
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              alignment: Alignment.bottomLeft,
-                              margin: EdgeInsets.only(left: 15),
-                              height: heightAppBar,
-                              child: profileButton(),
-                            ),
-                          ),
-                          Align(
-                            // TODO: app bar title
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              alignment: Alignment.bottomCenter,
-                              height: heightAppBar,
-                              width: widthScreen,
-                              child: appBar(),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 120,
-                              child: Column(
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Slider(
-                                    activeColor: Colors.white,
-                                    inactiveColor: Colors.grey,
-                                    value: _zoomFactor,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _zoomFactor = value;
-                                        controller.setZoomScale(value);
-                                      });
-                                    },
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconButton(
-                                        color: Colors.white,
-                                        icon: ValueListenableBuilder(
-                                          valueListenable:
-                                              controller.torchState,
-                                          builder: (context, state, child) {
-                                            if (state == null) {
-                                              return const Icon(
-                                                Icons.flash_off,
-                                                color: Colors.grey,
-                                              );
-                                            }
-                                            switch (state) {
-                                              case TorchState.off:
-                                                return const Icon(
-                                                  Icons.flash_off,
-                                                  color: Colors.grey,
-                                                );
-                                              case TorchState.on:
-                                                return const Icon(
-                                                  Icons.flash_on,
-                                                  color: Colors.yellow,
-                                                );
-                                            }
-                                          },
-                                        ),
-                                        iconSize: 32.0,
-                                        onPressed: () =>
-                                            controller.toggleTorch(),
-                                      ),
-                                      IconButton(
-                                        color: Colors.white,
-                                        icon: const Icon(Icons.image),
-                                        iconSize: 32.0,
-                                        onPressed: () async {
-                                          final ImagePicker picker =
-                                              ImagePicker();
-                                          // Pick an image
-                                          final XFile? image =
-                                              await picker.pickImage(
-                                            source: ImageSource.gallery,
-                                          );
-                                          if (image != null) {
-                                            if (await controller
-                                                .analyzeImage(image.path)) {
-                                              if (!mounted) return;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content:
-                                                      Text('Barcode found!'),
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                              );
-                                            } else {
-                                              if (!mounted) return;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content:
-                                                      Text('No barcode found!'),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                  flashTorch(),
+                                  pickImage(),
                                 ],
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }
-          },
-        ),
-      ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
     );
   }
 
@@ -238,10 +270,13 @@ class _ScannerViewState extends State<ScannerView>
           },
           child: Padding(
             padding: EdgeInsets.all(5.0),
-            child: Icon(
-              Icons.person,
-              size: 20.0,
-              color: Colors.white,
+            child: Tooltip(
+              message: 'Profile',
+              child: Icon(
+                Icons.person,
+                size: 20.0,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -267,11 +302,77 @@ class _ScannerViewState extends State<ScannerView>
   }
 
   Future<void> navigationToProfile() async {
+    stopCamera();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ProfileView(),
       ),
+    );
+  }
+
+  Widget flashTorch() {
+    return IconButton(
+      color: Colors.white,
+      icon: ValueListenableBuilder(
+        valueListenable: controller.torchState,
+        builder: (context, state, child) {
+          if (state == null) {
+            return const Icon(
+              Icons.flash_off,
+              color: Colors.grey,
+            );
+          }
+          switch (state) {
+            case TorchState.off:
+              return const Icon(
+                Icons.flash_off,
+                color: Colors.grey,
+              );
+            case TorchState.on:
+              return const Icon(
+                Icons.flash_on,
+                color: Colors.yellow,
+              );
+          }
+        },
+      ),
+      iconSize: 32.0,
+      onPressed: () => controller.toggleTorch(),
+    );
+  }
+
+  Widget pickImage() {
+    return IconButton(
+      color: Colors.white,
+      icon: const Icon(Icons.image),
+      iconSize: 32.0,
+      onPressed: () async {
+        final ImagePicker picker = ImagePicker();
+        // Pick an image
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.gallery,
+        );
+        if (image != null) {
+          if (await controller.analyzeImage(image.path)) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Barcode found!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No barcode found!'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      },
     );
   }
 }

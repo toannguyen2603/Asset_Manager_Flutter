@@ -5,7 +5,8 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
-  AssetGenImage get logo_splash => const AssetGenImage('assets/images/logo_splash.png');
+  AssetGenImage get logo_splash =>
+      const AssetGenImage('assets/images/logo_splash.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [logo, logo_splash];
@@ -14,16 +15,38 @@ class $AssetsImagesGen {
 class Assets {
   Assets._();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
+}
+
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/warning_96.json
+  AssetGenImage get warning =>
+      const AssetGenImage('assets/icons/warning_96.png');
+
+  AssetGenImage get cancel => const AssetGenImage('assets/icons/cancel.png');
+
+  AssetGenImage get email => const AssetGenImage('assets/icons/gmail.png');
+
+  AssetGenImage get logout =>
+      const AssetGenImage('assets/icons/x50/logout.png');
+
+  AssetGenImage get role => const AssetGenImage('assets/icons/x50/role.png');
+
+  AssetGenImage get phone => const AssetGenImage('assets/icons/x50/phone.png');
+
+  AssetGenImage get status =>
+      const AssetGenImage('assets/icons/x50/logout.png');
 }
 
 class $AssetsLottiesGen {
   const $AssetsLottiesGen();
 
   /// File path: assets/lotties/empty.json
-  String get empty => 'assets/lotties/loading.json';
-
+  String get loading => 'assets/lotties/loading.json';
 }
-
 
 class AssetGenImage {
   const AssetGenImage(this._assetName);
