@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:asset_manager_flutter/src/screens/asset/model/aproperty.dart';
 import 'package:dio/dio.dart';
 
 import '../../../constaints/type_defs/type_defs.dart';
-import '../../../utils/session_manager.dart';
+// import '../../../utils/session_manager.dart';
 
 class PropertyService {
   final Dio _dio;
@@ -13,10 +11,10 @@ class PropertyService {
 
   PropertyService(this._dio);
 
-  SessionManager prefs = SessionManager();
+  // SessionManager prefs = SessionManager();
 
   Future<AProperty> getProperty(String tag) async {
-    await prefs.getUserId().then((value) => userId = value);
+    // await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await _dio.get(
         '/api/Mobile/GetAsset/${userId}/${tag}',
@@ -39,10 +37,10 @@ class PropertyService {
 class PropertyScanner {
   final dio = Dio();
   UserId? userId;
-  SessionManager prefs = SessionManager();
+  // SessionManager prefs = SessionManager();
 
   Future<AProperty> getProperty(String tag) async {
-    await prefs.getUserId().then((value) => userId = value);
+    // await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await dio.get(
         'https://masset-api.nhp-tech.com/api/Mobile/GetAsset/${userId}/${tag}',

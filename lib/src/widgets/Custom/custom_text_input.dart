@@ -6,6 +6,7 @@ import '../../constaints/export_constraints.dart';
 
 class ATextField extends StatefulWidget {
   const ATextField({
+    super.key,
     required this.hintTextString,
     required this.textEditController,
     required this.inputType,
@@ -155,7 +156,7 @@ class _CustomTextInputState extends State<ATextField> {
         ),
       );
     } else {
-      if (widget.textEditController!.text.length > 0) {
+      if (widget.textEditController!.text.isNotEmpty) {
         return IconButton(
           onPressed: () {
             setState(() {

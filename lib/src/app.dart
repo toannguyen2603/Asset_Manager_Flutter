@@ -7,7 +7,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+    return const MaterialApp(
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: SplashView(),

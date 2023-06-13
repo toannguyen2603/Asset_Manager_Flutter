@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:asset_manager_flutter/src/screens/asset/service/property_service.dart';
 import 'package:asset_manager_flutter/src/screens/profile/view/profile_view.dart';
+import 'package:asset_manager_flutter/src/screens/scan/view/scanner_error.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
 import 'package:asset_manager_flutter/src/widgets/snack_bar/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,7 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView>
     with SingleTickerProviderStateMixin {
-  // Start code here ....
-  bool isLoading = true; // variable to check state
-  bool _isQrCodeValid = true;
+  bool isLoading = true;
   bool _isScannerQrCode = false;
 
   BarcodeCapture? capture;
@@ -40,9 +39,9 @@ class _ScannerViewState extends State<ScannerView>
   double _zoomFactor = 0.0;
 
   loadData() {
-    Timer(Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 5), () {
       setState(
-        () { 
+        () {
           isLoading = false;
         },
       );
@@ -55,26 +54,13 @@ class _ScannerViewState extends State<ScannerView>
     });
     final Barcode barcode = capture.barcodes.first;
     if (barcode.rawValue == null) {
-      // stopCamera();
-      // showBannerSnackBar(
-      //   title: 'Mã không hợp lệ',
-      //   subtitle: 'Vui lòng quét mã khác',
-      //   context: context,
-      //   backgroundColor: Colors.yellow[700],
-      //   onPressed: () {
-      //     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      //     startCamera();
-      //   },
-      //   controller: controller,
-      // );
     } else {
       final String code = barcode.rawValue!;
       if (_isValidQrCode(code)) {
-        _isQrCodeValid = true;
-        stopCamera();
         notifyClients(code).then(
           (state) {
             if (state) {
+              stopCamera();
               showBannerSnackBar(
                 title: 'Mã không hợp lệ',
                 subtitle: 'Vui lòng quét mã khác',
@@ -117,16 +103,10 @@ class _ScannerViewState extends State<ScannerView>
 
   Future<void> startCamera() async {
     await controller.start();
-    setState(() {
-      _isScannerQrCode = false;
-    });
   }
 
   Future<void> stopCamera() async {
     await controller.stop();
-    setState(() {
-      _isQrCodeValid = true;
-    });
   }
 
   Future<bool> notifyClients(String tag) async {
@@ -176,6 +156,9 @@ class _ScannerViewState extends State<ScannerView>
                     children: [
                       MobileScanner(
                         controller: controller,
+                        errorBuilder: (context, error, child) {
+                          return ScannerErrorWidget(error: error);
+                        },
                         startDelay: true,
                         onDetect: onDetect,
                       ),
@@ -306,7 +289,7 @@ class _ScannerViewState extends State<ScannerView>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProfileView(),
+        builder: (context) => const ProfileView(),
       ),
     );
   }

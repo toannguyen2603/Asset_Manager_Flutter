@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:asset_manager_flutter/src/constaints/export_constraints.dart';
-import 'package:asset_manager_flutter/src/screens/scan/view/scan_view.dart';
+import 'package:asset_manager_flutter/src/screens/scan/view/scanner_view.dart';
 import 'package:asset_manager_flutter/src/widgets/common/big_text.dart';
 import 'package:asset_manager_flutter/src/widgets/common/double_row.dart';
 import 'package:asset_manager_flutter/src/widgets/common/small_text.dart';
@@ -131,11 +131,12 @@ class PropertyScreen extends ConsumerWidget {
                               ? 'No description'
                               : '${data.description}'),
                           Gaps.h20,
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              SubmitButton(label: 'Edit'),
-                              SubmitButton(label: 'Maintenance'),
+                              SubmitButton(
+                                  label: 'Edit'),
+                              const SubmitButton(label: 'Maintenance'),
                             ],
                           ),
                           Gaps.h32,

@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import '../../constaints/app_sizes.dart';
 
 class SubmitButton extends StatelessWidget {
-  final String label;
-  final VoidCallback? onPress;
   const SubmitButton({
     super.key,
     required this.label,
     this.onPress,
   });
 
+  final String label;
+  final VoidCallback? onPress;
+
   @override
   Widget build(BuildContext context) {
     return FilledButton(
         onPressed: onPress,
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width / 3.5,
           height: 30,
           child: Center(
