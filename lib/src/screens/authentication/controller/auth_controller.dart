@@ -19,7 +19,7 @@ class AuthController extends StateNotifier<DataState> {
       if (user.message.isEmpty && user.role == Role.staff) {
         state = DataState.success(data: user);
       } else {
-        state = DataState.error(
+        state = const DataState.error(
             message: 'Username or password is incorrect. Please try again');
       }
     } catch (e) {

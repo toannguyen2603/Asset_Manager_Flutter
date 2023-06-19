@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:asset_manager_flutter/src/screens/asset/model/aproperty.dart';
 import 'package:dio/dio.dart';
 
@@ -19,7 +17,7 @@ class PropertyService {
     await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await _dio.get(
-        '/api/Mobile/GetAsset/${userId}/${tag}',
+        '/api/Mobile/GetAsset/91c47fe3-57f2-44c3-be2f-9f1fdb277e62/${tag}',
       );
       if (response.statusCode == 200) {
         final data = AProperty.fromJson(response.data);

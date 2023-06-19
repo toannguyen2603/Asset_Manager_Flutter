@@ -27,6 +27,7 @@ mixin _$AProperty {
   String? get supplier => throw _privateConstructorUsedError;
   String? get brand => throw _privateConstructorUsedError;
   String? get serial => throw _privateConstructorUsedError;
+  String? get location => throw _privateConstructorUsedError;
   int get cost => throw _privateConstructorUsedError;
   int get warranty => throw _privateConstructorUsedError;
   int? get status => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $APropertyCopyWith<$Res> {
       String? supplier,
       String? brand,
       String? serial,
+      String? location,
       int cost,
       int warranty,
       int? status,
@@ -91,6 +93,7 @@ class _$APropertyCopyWithImpl<$Res, $Val extends AProperty>
     Object? supplier = freezed,
     Object? brand = freezed,
     Object? serial = freezed,
+    Object? location = freezed,
     Object? cost = null,
     Object? warranty = null,
     Object? status = freezed,
@@ -131,6 +134,10 @@ class _$APropertyCopyWithImpl<$Res, $Val extends AProperty>
       serial: freezed == serial
           ? _value.serial
           : serial // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
               as String?,
       cost: null == cost
           ? _value.cost
@@ -195,6 +202,7 @@ abstract class _$$_APropertyCopyWith<$Res> implements $APropertyCopyWith<$Res> {
       String? supplier,
       String? brand,
       String? serial,
+      String? location,
       int cost,
       int warranty,
       int? status,
@@ -226,6 +234,7 @@ class __$$_APropertyCopyWithImpl<$Res>
     Object? supplier = freezed,
     Object? brand = freezed,
     Object? serial = freezed,
+    Object? location = freezed,
     Object? cost = null,
     Object? warranty = null,
     Object? status = freezed,
@@ -266,6 +275,10 @@ class __$$_APropertyCopyWithImpl<$Res>
       serial: freezed == serial
           ? _value.serial
           : serial // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
               as String?,
       cost: null == cost
           ? _value.cost
@@ -326,6 +339,7 @@ class _$_AProperty implements _AProperty {
       this.supplier,
       this.brand,
       this.serial,
+      this.location,
       this.cost = 0,
       this.warranty = 0,
       this.status,
@@ -357,6 +371,8 @@ class _$_AProperty implements _AProperty {
   @override
   final String? serial;
   @override
+  final String? location;
+  @override
   @JsonKey()
   final int cost;
   @override
@@ -386,7 +402,7 @@ class _$_AProperty implements _AProperty {
 
   @override
   String toString() {
-    return 'AProperty(id: $id, name: $name, tag: $tag, type: $type, supplier: $supplier, brand: $brand, serial: $serial, cost: $cost, warranty: $warranty, status: $status, description: $description, createDay: $createDay, updateDay: $updateDay, image: $image, isCheckOut: $isCheckOut, error: $error, message: $message, purchaseDay: $purchaseDay)';
+    return 'AProperty(id: $id, name: $name, tag: $tag, type: $type, supplier: $supplier, brand: $brand, serial: $serial, location: $location, cost: $cost, warranty: $warranty, status: $status, description: $description, createDay: $createDay, updateDay: $updateDay, image: $image, isCheckOut: $isCheckOut, error: $error, message: $message, purchaseDay: $purchaseDay)';
   }
 
   @override
@@ -402,6 +418,8 @@ class _$_AProperty implements _AProperty {
                 other.supplier == supplier) &&
             (identical(other.brand, brand) || other.brand == brand) &&
             (identical(other.serial, serial) || other.serial == serial) &&
+            (identical(other.location, location) ||
+                other.location == location) &&
             (identical(other.cost, cost) || other.cost == cost) &&
             (identical(other.warranty, warranty) ||
                 other.warranty == warranty) &&
@@ -423,26 +441,28 @@ class _$_AProperty implements _AProperty {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      tag,
-      type,
-      supplier,
-      brand,
-      serial,
-      cost,
-      warranty,
-      status,
-      description,
-      createDay,
-      updateDay,
-      image,
-      isCheckOut,
-      error,
-      message,
-      purchaseDay);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        name,
+        tag,
+        type,
+        supplier,
+        brand,
+        serial,
+        location,
+        cost,
+        warranty,
+        status,
+        description,
+        createDay,
+        updateDay,
+        image,
+        isCheckOut,
+        error,
+        message,
+        purchaseDay
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -467,6 +487,7 @@ abstract class _AProperty implements AProperty {
       final String? supplier,
       final String? brand,
       final String? serial,
+      final String? location,
       final int cost,
       final int warranty,
       final int? status,
@@ -496,6 +517,8 @@ abstract class _AProperty implements AProperty {
   String? get brand;
   @override
   String? get serial;
+  @override
+  String? get location;
   @override
   int get cost;
   @override

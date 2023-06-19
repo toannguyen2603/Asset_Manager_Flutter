@@ -1,5 +1,4 @@
 import 'package:asset_manager_flutter/env.dart';
-import 'package:asset_manager_flutter/src/screens/profile/controller/user.dart';
 import 'package:dio/dio.dart';
 
 import '../../../utils/session_manager.dart';
@@ -10,8 +9,7 @@ class AuthService {
 
   AuthService(this._dio);
 
-  SessionManager prefs = SessionManager();
-  UserManager user = UserManager();
+  SessionManager session = SessionManager();
 
   Future<LAuthUser> login(String username, String password) async {
     try {
@@ -24,8 +22,12 @@ class AuthService {
       );
       if (response.statusCode == 200) {
         var data = LAuthUser.fromJson(response.data);
-        prefs.setUserId(data.id ?? 'null');
-        user.setInfoUser(data);
+        if (!data.error) {
+          session.setUserId(data.id ?? '');
+          session.setInfoUser(data);
+        } else {
+          throw Exception('An error occurred');
+        }
         return data;
       } else {
         throw Exception('An error occurred');

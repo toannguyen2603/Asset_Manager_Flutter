@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../../../constaints/app_sizes.dart';
 import '../../../themes/colors.dart';
 import '../../../themes/styles.dart';
+import '../../../utils/session_manager.dart';
+import '../../authentication/view/sign_in/sign_in_view.dart';
 
 class Logout extends StatelessWidget {
   const Logout({
@@ -55,6 +58,41 @@ class Logout extends StatelessWidget {
         ),
         onPressed: onPress,
       ),
+    );
+  }
+}
+
+class buildAlertDialog extends StatelessWidget {
+  const buildAlertDialog({
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoAlertDialog(
+      title: const Text('Logout'),
+      content: const Text('Do you want logout?'),
+      actions: [
+        CupertinoDialogAction(
+          child: Text('No'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          isDefaultAction: true,
+        ),
+        CupertinoDialogAction(
+          child: Text('Yes'),
+          onPressed: () {
+            SessionManager().clearAll();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SignInView(),
+              ),
+            );
+          },
+          isDestructiveAction: true,
+        )
+      ],
     );
   }
 }

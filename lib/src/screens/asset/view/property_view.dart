@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:asset_manager_flutter/src/constaints/export_constraints.dart';
-import 'package:asset_manager_flutter/src/screens/scan/view/scan_view.dart';
+import 'package:asset_manager_flutter/src/screens/edit/view/edit_view.dart';
+import 'package:asset_manager_flutter/src/screens/scan/view/scanner_view.dart';
 import 'package:asset_manager_flutter/src/widgets/common/big_text.dart';
-import 'package:asset_manager_flutter/src/widgets/common/double_row.dart';
 import 'package:asset_manager_flutter/src/widgets/common/small_text.dart';
 import 'package:asset_manager_flutter/src/widgets/state/loading/loading.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:intl/intl.dart';
 import '../../../constaints/type_defs/type_defs.dart';
 import '../../../themes/colors.dart';
 import '../../../utils/status.dart';
-import '../../../widgets/common/submit_button.dart';
 import '../controller/property_reponsitory.dart';
 
 class PropertyScreen extends ConsumerWidget {
@@ -41,13 +39,14 @@ class PropertyScreen extends ConsumerWidget {
                 slivers: [
                   SliverAppBar(
                     pinned: true,
+                    backgroundColor: AColors.white,
                     leading: backButton(context),
-                    expandedHeight: 300,
+                    expandedHeight: 280,
                     flexibleSpace: FlexibleSpaceBar(
                         background: Image.memory(
                       base64Decode(data.image ?? ''),
                       width: double.maxFinite,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     )),
                   ),
                   SliverToBoxAdapter(
@@ -66,63 +65,64 @@ class PropertyScreen extends ConsumerWidget {
                             text:
                                 '${data.type} - ${ref.read(statusProvider).checkStatus(data.status ?? 0)}',
                             size: Sizes.p13,
+                            fontWeight: FontWeight.bold,
                           ),
                           Gaps.h8,
                           BigText(
                             text: 'Details',
-                            size: Sizes.p20,
                           ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'type',
-                            description: data.type ?? '--',
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Serial',
-                            description: data.serial ?? '--',
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Cost',
-                            description: NumberFormat.simpleCurrency(
-                                    name: 'VND', decimalDigits: 2)
-                                .format(data.cost),
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Brand',
-                            description: data.brand ?? '--',
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Purchase date',
-                            description: getDate(data.purchaseDay),
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Warranty',
-                            description: '${data.warranty} month',
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Supplier',
-                            description: data.supplier ?? '---',
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Create at',
-                            description: getDate(data.createDay),
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Update at',
-                            description: getDate(data.updateDay),
-                          ),
-                          Gaps.h8,
-                          DoubleRow(
-                            title: 'Check-out',
-                            description: data.isCheckOut ? 'Yes' : 'No',
+                          Table(
+                            columnWidths: const {
+                              0: FlexColumnWidth(2),
+                              1: FlexColumnWidth(4)
+                            },
+                            border: TableBorder.all(
+                                width: 1.5, color: Colors.black),
+                            children: [
+                              _TableRow(
+                                'Serial',
+                                data.serial ?? '---',
+                              ),
+                              _TableRow(
+                                'Cost',
+                                NumberFormat.simpleCurrency(
+                                        name: 'VND', decimalDigits: 2)
+                                    .format(data.cost),
+                              ),
+                              _TableRow(
+                                'Brand',
+                                data.brand ?? '---',
+                              ),
+                              _TableRow(
+                                'Purchase date',
+                                getDate(data.purchaseDay),
+                              ),
+                              _TableRow(
+                                
+                                'Warranty',
+                                '${data.warranty} Month',
+                              ),
+                              _TableRow(
+                                'Supplier',
+                                data.supplier ?? '---',
+                              ),
+                              _TableRow(
+                                'Location',
+                                data.location ?? '---',
+                              ),
+                              _TableRow(
+                                'Create day',
+                                getDate(data.createDay),
+                              ),
+                              _TableRow(
+                                'Update day',
+                                getDate(data.updateDay),
+                              ),
+                              _TableRow(
+                                'Check out',
+                                data.isCheckOut ? 'Yes' : 'No',
+                              ),
+                            ],
                           ),
                           Gaps.h8,
                           BigText(text: 'Description'),
@@ -131,14 +131,55 @@ class PropertyScreen extends ConsumerWidget {
                               ? 'No description'
                               : '${data.description}'),
                           Gaps.h20,
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              SubmitButton(label: 'Edit'),
-                              SubmitButton(label: 'Maintenance'),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.black, // Background color
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const EditView(),
+                                      ));
+                                },
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  height: 30,
+                                  child: Center(
+                                    child: BigText(
+                                      text: 'Edit',
+                                      color: AColors.white,
+                                      size: Sizes.p14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.black, // Background color
+                                ),
+                                onPressed: () {},
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  height: 30,
+                                  child: Center(
+                                    child: BigText(
+                                      text: 'Maintenance',
+                                      color: AColors.white,
+                                      size: Sizes.p14,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          Gaps.h32,
                         ],
                       ),
                     ),
@@ -152,18 +193,46 @@ class PropertyScreen extends ConsumerWidget {
             loading: LoadingState.new));
   }
 
+  TableRow _TableRow(String title, String description) {
+    return TableRow(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Text(
+              title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black87),
+            ),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Text(
+              description,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black87),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget backButton(BuildContext context) {
     return IconButton(
       onPressed: () {
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ScannerView(),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ScannerView(),
+          ),
+        );
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back,
-        color: AColors.white,
+        color: Colors.black,
       ),
     );
   }

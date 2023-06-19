@@ -1,5 +1,3 @@
-import 'package:asset_manager_flutter/src/screens/authentication/view/sign_in/sign_in_view.dart';
-import 'package:asset_manager_flutter/src/screens/profile/controller/user.dart';
 import 'package:asset_manager_flutter/src/screens/profile/view/profile_information.dart';
 import 'package:asset_manager_flutter/src/screens/profile/view/profile_picture.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
@@ -20,7 +18,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  UserManager manager = UserManager();
+  SessionManager manager = SessionManager();
   String? email;
   String? role;
   String? name;
@@ -105,7 +103,7 @@ class _ProfileViewState extends State<ProfileView> {
             Logout(
               onPress: () {
                 showDialog(
-                    context: context, builder: (_) => _buildAlertDialog());
+                    context: context, builder: (_) => const buildAlertDialog());
               },
             )
           ],
@@ -125,37 +123,5 @@ class _ProfileViewState extends State<ProfileView> {
   }
 }
 
-class _buildAlertDialog extends StatelessWidget {
-  const _buildAlertDialog({
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
-      title: Text('Logout'),
-      content: Text('Do you want logout?'),
-      actions: [
-        CupertinoDialogAction(
-          child: Text('No'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          isDefaultAction: true,
-        ),
-        CupertinoDialogAction(
-          child: Text('Yes'),
-          onPressed: () {
-            SessionManager().clearAll();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SignInView(),
-              ),
-            );
-          },
-          isDestructiveAction: true,
-        )
-      ],
-    );
-  }
-}
+
+
