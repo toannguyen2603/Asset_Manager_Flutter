@@ -26,7 +26,7 @@ class DropDownListStatus extends StatelessWidget {
               height: 50,
             ),
             const Text(
-              'Change status',
+              'Status',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Gaps.h20,

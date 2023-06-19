@@ -98,6 +98,7 @@ class PropertyScreen extends ConsumerWidget {
                                 getDate(data.purchaseDay),
                               ),
                               _TableRow(
+                                
                                 'Warranty',
                                 '${data.warranty} Month',
                               ),
