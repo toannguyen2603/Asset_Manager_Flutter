@@ -13,6 +13,7 @@ class AProperty with _$AProperty {
     String? supplier,
     String? brand,
     String? serial,
+    String? location,
     @Default(0) int cost,
     @Default(0) int warranty,
     int? status,

@@ -2,7 +2,7 @@ import 'package:asset_manager_flutter/src/screens/asset/model/aproperty.dart';
 import 'package:dio/dio.dart';
 
 import '../../../constaints/type_defs/type_defs.dart';
-// import '../../../utils/session_manager.dart';
+import '../../../utils/session_manager.dart';
 
 class PropertyService {
   final Dio _dio;
@@ -11,13 +11,13 @@ class PropertyService {
 
   PropertyService(this._dio);
 
-  // SessionManager prefs = SessionManager();
+  SessionManager prefs = SessionManager();
 
   Future<AProperty> getProperty(String tag) async {
-    // await prefs.getUserId().then((value) => userId = value);
+    await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await _dio.get(
-        '/api/Mobile/GetAsset/${userId}/${tag}',
+        '/api/Mobile/GetAsset/91c47fe3-57f2-44c3-be2f-9f1fdb277e62/${tag}',
       );
       if (response.statusCode == 200) {
         final data = AProperty.fromJson(response.data);
@@ -37,10 +37,10 @@ class PropertyService {
 class PropertyScanner {
   final dio = Dio();
   UserId? userId;
-  // SessionManager prefs = SessionManager();
+  SessionManager prefs = SessionManager();
 
   Future<AProperty> getProperty(String tag) async {
-    // await prefs.getUserId().then((value) => userId = value);
+    await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await dio.get(
         'https://masset-api.nhp-tech.com/api/Mobile/GetAsset/${userId}/${tag}',

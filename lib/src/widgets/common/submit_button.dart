@@ -15,7 +15,10 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black, // Background color
+        ),
         onPressed: onPress,
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 3.5,

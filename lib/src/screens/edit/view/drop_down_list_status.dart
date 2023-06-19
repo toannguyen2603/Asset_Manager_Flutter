@@ -46,14 +46,20 @@ class DropDownListStatus extends StatelessWidget {
                   ),
                 ),
                 initialValue: 'Pending',
-                // readOnly: false,
-                // controller: _cnt,
                 clearOption: true,
-
                 keyboardType: TextInputType.number,
-                clearIconProperty: IconProperty(color: Colors.grey),
+                clearIconProperty: IconProperty(
+                  color: Colors.grey,
+                ),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required field';
+                  } else {
+                    return null;
+                  }
+                },
                 dropDownItemCount: 6,
-
                 dropDownList: const [
                   DropDownValueModel(name: 'Ready to deploy', value: 1),
                   DropDownValueModel(name: 'Pending', value: 2),

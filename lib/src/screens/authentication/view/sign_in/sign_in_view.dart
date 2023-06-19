@@ -72,6 +72,7 @@ class _SignInScreenState extends ConsumerState<SignInView> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifier);
+    final height = MediaQuery.of(context).size.height;
 
     ref.listen<DataState>(authNotifier, (_, state) {
       state.maybeWhen(
@@ -170,6 +171,16 @@ class _SignInScreenState extends ConsumerState<SignInView> {
                               color: AColors.white,
                             ),
                           ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 200.0),
+                  child: Text(
+                    'Version 1.0.1',
+                    style: PStyle.poppins(context)!.copyWith(
+                      fontSize: Sizes.p14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 )
               ],
