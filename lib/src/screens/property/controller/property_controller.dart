@@ -1,5 +1,5 @@
 import 'package:asset_manager_flutter/src/constaints/type_defs/type_defs.dart';
-import 'package:asset_manager_flutter/src/screens/asset/service/property_service.dart';
+import 'package:asset_manager_flutter/src/screens/property/service/property_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../widgets/state/data_state.dart';

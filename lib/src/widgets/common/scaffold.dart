@@ -21,7 +21,9 @@ class LScaffold extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onPanStart: (_) {
-        _hideKeyboard(context);
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        // _hideKeyboard(context);
       },
       child: Scaffold(
         appBar: appBar,
@@ -42,4 +44,5 @@ class LScaffold extends StatelessWidget {
 
 void _hideKeyboard(BuildContext context) {
   FocusManager.instance.primaryFocus?.unfocus();
+  print('User tap around');
 }

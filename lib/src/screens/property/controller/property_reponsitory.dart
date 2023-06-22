@@ -1,6 +1,6 @@
 import 'package:asset_manager_flutter/env.dart';
-import 'package:asset_manager_flutter/src/screens/asset/model/aproperty.dart';
-import 'package:asset_manager_flutter/src/screens/asset/service/property_service.dart';
+import 'package:asset_manager_flutter/src/screens/property/model/aproperty.dart';
+import 'package:asset_manager_flutter/src/screens/property/service/property_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

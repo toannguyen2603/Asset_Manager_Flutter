@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:asset_manager_flutter/src/constaints/export_constraints.dart';
-import 'package:asset_manager_flutter/src/screens/edit/view/edit_view.dart';
+import 'package:asset_manager_flutter/src/screens/edit/view/edit_screen.dart';
+import 'package:asset_manager_flutter/src/screens/maintenance/view/maintenance_screen.dart';
 import 'package:asset_manager_flutter/src/screens/scan/view/scanner_view.dart';
 import 'package:asset_manager_flutter/src/widgets/common/big_text.dart';
 import 'package:asset_manager_flutter/src/widgets/common/small_text.dart';
@@ -98,7 +99,6 @@ class PropertyScreen extends ConsumerWidget {
                                 getDate(data.purchaseDay),
                               ),
                               _TableRow(
-                                
                                 'Warranty',
                                 '${data.warranty} Month',
                               ),
@@ -141,10 +141,11 @@ class PropertyScreen extends ConsumerWidget {
                                 ),
                                 onPressed: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const EditView(),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditView(status: data.status,),
+                                    ),
+                                  );
                                 },
                                 child: SizedBox(
                                   width:
@@ -164,7 +165,15 @@ class PropertyScreen extends ConsumerWidget {
                                   backgroundColor:
                                       Colors.black, // Background color
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MaintenanceScreen(),
+                                    ),
+                                  );
+                                },
                                 child: SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width / 3.5,

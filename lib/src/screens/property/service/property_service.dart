@@ -1,4 +1,4 @@
-import 'package:asset_manager_flutter/src/screens/asset/model/aproperty.dart';
+import 'package:asset_manager_flutter/src/screens/property/model/aproperty.dart';
 import 'package:dio/dio.dart';
 
 import '../../../constaints/type_defs/type_defs.dart';
@@ -17,7 +17,7 @@ class PropertyService {
     await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await _dio.get(
-        '/api/Mobile/GetAsset/91c47fe3-57f2-44c3-be2f-9f1fdb277e62/${tag}',
+        '/api/Mobile/GetAsset/${userId ?? ''}/${tag}',
       );
       if (response.statusCode == 200) {
         final data = AProperty.fromJson(response.data);
@@ -43,7 +43,7 @@ class PropertyScanner {
     await prefs.getUserId().then((value) => userId = value);
     try {
       final response = await dio.get(
-        'https://masset-api.nhp-tech.com/api/Mobile/GetAsset/${userId}/${tag}',
+        'https://masset-api.nhp-tech.com/api/Mobile/GetAsset/${userId ?? ''}/${tag}',
       );
       if (response.statusCode == 200) {
         final data = AProperty.fromJson(response.data);
