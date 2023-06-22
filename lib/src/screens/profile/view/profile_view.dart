@@ -26,7 +26,6 @@ class _ProfileViewState extends State<ProfileView> {
 
   _getInfoUser() {
     manager.getEmail().then((value) {
-      print('Email of user ${value.email}');
       email = value.email;
       role = value.role;
       name = value.userName;
@@ -85,20 +84,20 @@ class _ProfileViewState extends State<ProfileView> {
         child: Column(
           children: [
             ProfilePicture(
-              title: name,
+              title: '18521507',
             ),
             Gaps.h20,
             ProfileInformation(
               icon: Assets.icons.email.path,
-              text: email,
+              text: '18521507@gm.student.com',
             ),
             ProfileInformation(
               icon: Assets.icons.phone.path,
-              text: phone,
+              text: '0961957440',
             ),
             ProfileInformation(
               icon: Assets.icons.role.path,
-              text: role,
+              text: 'Staff',
             ),
             Logout(
               onPress: () {
@@ -122,6 +121,3 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 }
-
-
-

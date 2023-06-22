@@ -174,7 +174,7 @@ class _SignInScreenState extends ConsumerState<SignInView> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 200.0),
+                  padding: const EdgeInsets.only(top: 200.0),
                   child: Text(
                     'Version 1.0.1',
                     style: PStyle.poppins(context)!.copyWith(

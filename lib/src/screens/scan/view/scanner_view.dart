@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:asset_manager_flutter/src/screens/asset/service/property_service.dart';
+import 'package:asset_manager_flutter/src/screens/property/service/property_service.dart';
 import 'package:asset_manager_flutter/src/screens/profile/view/profile_view.dart';
 import 'package:asset_manager_flutter/src/screens/scan/view/scanner_error.dart';
 import 'package:asset_manager_flutter/src/themes/colors.dart';
@@ -13,7 +13,7 @@ import '../../../constaints/app_sizes.dart';
 import '../../../themes/styles.dart';
 import '../../../widgets/common/qr_scanner_overlay_shape.dart';
 import '../../../widgets/state/loading/loading.dart';
-import '../../asset/view/property_view.dart';
+import '../../property/view/property_view.dart';
 
 class ScannerView extends StatefulWidget {
   const ScannerView({super.key});
@@ -180,7 +180,7 @@ class _ScannerViewState extends State<ScannerView>
                         alignment: Alignment.topCenter,
                         child: Container(
                           alignment: Alignment.bottomLeft,
-                          margin: EdgeInsets.only(left: 15),
+                          margin: const EdgeInsets.only(left: 15),
                           height: heightAppBar,
                           child: profileButton(),
                         ),
@@ -251,7 +251,7 @@ class _ScannerViewState extends State<ScannerView>
           onTap: () {
             navigationToProfile();
           },
-          child: Padding(
+          child: const Padding(
             padding: EdgeInsets.all(5.0),
             child: Tooltip(
               message: 'Profile',

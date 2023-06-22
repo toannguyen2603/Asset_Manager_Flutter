@@ -5,7 +5,7 @@ class Status {
   String checkStatus(int status) {
     switch (status) {
       case 1:
-        return 'Ready To Deploy';
+        return 'Ready to Deploy';
       case 2:
         return 'Pending';
       case 3:

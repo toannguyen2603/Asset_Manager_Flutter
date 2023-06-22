@@ -6,4 +6,8 @@ class config {
   static String assetAPI(UserId id, Tag tag) {
     return '/api/Mobile/GetAsset/${id}/${tag}';
   }
+
+  static String editProperty(UserId id, Tag tag) {
+    return '/api/Mobile/UpdateAsset/${id}/${tag}';
+  }
 }

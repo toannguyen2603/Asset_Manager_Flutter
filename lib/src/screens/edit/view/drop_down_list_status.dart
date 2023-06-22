@@ -2,16 +2,23 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constaints/app_sizes.dart';
+import '../../../utils/status.dart';
+
+typedef StatusCallback = void Function(int val);
 
 class DropDownListStatus extends StatelessWidget {
   const DropDownListStatus({
     super.key,
     required GlobalKey<FormState> formKey2,
     required this.formKey,
+    required this.status,
+    required this.callback,
   }) : _formKey = formKey2;
 
   final GlobalKey<FormState> _formKey;
   final GlobalKey<FormState> formKey;
+  final int status;
+  final StatusCallback callback;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,7 @@ class DropDownListStatus extends StatelessWidget {
                     ),
                   ),
                 ),
-                initialValue: 'Pending',
+                initialValue: Status().checkStatus(status),
                 clearOption: true,
                 keyboardType: TextInputType.number,
                 clearIconProperty: IconProperty(
@@ -61,7 +68,7 @@ class DropDownListStatus extends StatelessWidget {
                 },
                 dropDownItemCount: 6,
                 dropDownList: const [
-                  DropDownValueModel(name: 'Ready to deploy', value: 1),
+                  DropDownValueModel(name: 'Ready to Deploy', value: 1),
                   DropDownValueModel(name: 'Pending', value: 2),
                   DropDownValueModel(name: 'Archived', value: 3),
                   DropDownValueModel(name: 'Broken', value: 4),
@@ -69,7 +76,7 @@ class DropDownListStatus extends StatelessWidget {
                   DropDownValueModel(name: 'OutOfRepair', value: 6),
                 ],
                 onChanged: (val) {
-                  print(val);
+                  callback(val?.value);
                 },
               ),
             ),
