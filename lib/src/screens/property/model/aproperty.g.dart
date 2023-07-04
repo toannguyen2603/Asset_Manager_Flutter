@@ -25,13 +25,13 @@ _$_AProperty _$$_APropertyFromJson(Map<String, dynamic> json) => _$_AProperty(
       updateDay: json['updateDay'] == null
           ? null
           : DateTime.parse(json['updateDay'] as String),
+      purchaseDay: json['purchaseDay'] == null
+          ? null
+          : DateTime.parse(json['purchaseDay'] as String),
       image: json['image'] as String?,
       isCheckOut: json['isCheckOut'] as bool? ?? false,
       error: json['error'] as bool? ?? false,
       message: json['message'] as String? ?? '',
-      purchaseDay: json['purchaseDay'] == null
-          ? null
-          : DateTime.parse(json['purchaseDay'] as String),
     );
 
 Map<String, dynamic> _$$_APropertyToJson(_$_AProperty instance) =>
@@ -50,9 +50,9 @@ Map<String, dynamic> _$$_APropertyToJson(_$_AProperty instance) =>
       'description': instance.description,
       'createDay': instance.createDay?.toIso8601String(),
       'updateDay': instance.updateDay?.toIso8601String(),
+      'purchaseDay': instance.purchaseDay?.toIso8601String(),
       'image': instance.image,
       'isCheckOut': instance.isCheckOut,
       'error': instance.error,
       'message': instance.message,
-      'purchaseDay': instance.purchaseDay?.toIso8601String(),
     };

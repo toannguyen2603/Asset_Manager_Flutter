@@ -34,11 +34,11 @@ mixin _$AProperty {
   String? get description => throw _privateConstructorUsedError;
   DateTime? get createDay => throw _privateConstructorUsedError;
   DateTime? get updateDay => throw _privateConstructorUsedError;
+  DateTime? get purchaseDay => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   bool get isCheckOut => throw _privateConstructorUsedError;
   bool get error => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  DateTime? get purchaseDay => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -66,11 +66,11 @@ abstract class $APropertyCopyWith<$Res> {
       String? description,
       DateTime? createDay,
       DateTime? updateDay,
+      DateTime? purchaseDay,
       String? image,
       bool isCheckOut,
       bool error,
-      String message,
-      DateTime? purchaseDay});
+      String message});
 }
 
 /// @nodoc
@@ -100,11 +100,11 @@ class _$APropertyCopyWithImpl<$Res, $Val extends AProperty>
     Object? description = freezed,
     Object? createDay = freezed,
     Object? updateDay = freezed,
+    Object? purchaseDay = freezed,
     Object? image = freezed,
     Object? isCheckOut = null,
     Object? error = null,
     Object? message = null,
-    Object? purchaseDay = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -163,6 +163,10 @@ class _$APropertyCopyWithImpl<$Res, $Val extends AProperty>
           ? _value.updateDay
           : updateDay // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      purchaseDay: freezed == purchaseDay
+          ? _value.purchaseDay
+          : purchaseDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -179,10 +183,6 @@ class _$APropertyCopyWithImpl<$Res, $Val extends AProperty>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      purchaseDay: freezed == purchaseDay
-          ? _value.purchaseDay
-          : purchaseDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ) as $Val);
   }
 }
@@ -209,11 +209,11 @@ abstract class _$$_APropertyCopyWith<$Res> implements $APropertyCopyWith<$Res> {
       String? description,
       DateTime? createDay,
       DateTime? updateDay,
+      DateTime? purchaseDay,
       String? image,
       bool isCheckOut,
       bool error,
-      String message,
-      DateTime? purchaseDay});
+      String message});
 }
 
 /// @nodoc
@@ -241,11 +241,11 @@ class __$$_APropertyCopyWithImpl<$Res>
     Object? description = freezed,
     Object? createDay = freezed,
     Object? updateDay = freezed,
+    Object? purchaseDay = freezed,
     Object? image = freezed,
     Object? isCheckOut = null,
     Object? error = null,
     Object? message = null,
-    Object? purchaseDay = freezed,
   }) {
     return _then(_$_AProperty(
       id: null == id
@@ -304,6 +304,10 @@ class __$$_APropertyCopyWithImpl<$Res>
           ? _value.updateDay
           : updateDay // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      purchaseDay: freezed == purchaseDay
+          ? _value.purchaseDay
+          : purchaseDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -320,10 +324,6 @@ class __$$_APropertyCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      purchaseDay: freezed == purchaseDay
-          ? _value.purchaseDay
-          : purchaseDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ));
   }
 }
@@ -346,11 +346,11 @@ class _$_AProperty implements _AProperty {
       this.description,
       this.createDay,
       this.updateDay,
+      this.purchaseDay,
       this.image,
       this.isCheckOut = false,
       this.error = false,
-      this.message = '',
-      this.purchaseDay});
+      this.message = ''});
 
   factory _$_AProperty.fromJson(Map<String, dynamic> json) =>
       _$$_APropertyFromJson(json);
@@ -387,6 +387,8 @@ class _$_AProperty implements _AProperty {
   @override
   final DateTime? updateDay;
   @override
+  final DateTime? purchaseDay;
+  @override
   final String? image;
   @override
   @JsonKey()
@@ -397,12 +399,10 @@ class _$_AProperty implements _AProperty {
   @override
   @JsonKey()
   final String message;
-  @override
-  final DateTime? purchaseDay;
 
   @override
   String toString() {
-    return 'AProperty(id: $id, name: $name, tag: $tag, type: $type, supplier: $supplier, brand: $brand, serial: $serial, location: $location, cost: $cost, warranty: $warranty, status: $status, description: $description, createDay: $createDay, updateDay: $updateDay, image: $image, isCheckOut: $isCheckOut, error: $error, message: $message, purchaseDay: $purchaseDay)';
+    return 'AProperty(id: $id, name: $name, tag: $tag, type: $type, supplier: $supplier, brand: $brand, serial: $serial, location: $location, cost: $cost, warranty: $warranty, status: $status, description: $description, createDay: $createDay, updateDay: $updateDay, purchaseDay: $purchaseDay, image: $image, isCheckOut: $isCheckOut, error: $error, message: $message)';
   }
 
   @override
@@ -430,13 +430,13 @@ class _$_AProperty implements _AProperty {
                 other.createDay == createDay) &&
             (identical(other.updateDay, updateDay) ||
                 other.updateDay == updateDay) &&
+            (identical(other.purchaseDay, purchaseDay) ||
+                other.purchaseDay == purchaseDay) &&
             (identical(other.image, image) || other.image == image) &&
             (identical(other.isCheckOut, isCheckOut) ||
                 other.isCheckOut == isCheckOut) &&
             (identical(other.error, error) || other.error == error) &&
-            (identical(other.message, message) || other.message == message) &&
-            (identical(other.purchaseDay, purchaseDay) ||
-                other.purchaseDay == purchaseDay));
+            (identical(other.message, message) || other.message == message));
   }
 
   @JsonKey(ignore: true)
@@ -457,11 +457,11 @@ class _$_AProperty implements _AProperty {
         description,
         createDay,
         updateDay,
+        purchaseDay,
         image,
         isCheckOut,
         error,
-        message,
-        purchaseDay
+        message
       ]);
 
   @JsonKey(ignore: true)
@@ -494,11 +494,11 @@ abstract class _AProperty implements AProperty {
       final String? description,
       final DateTime? createDay,
       final DateTime? updateDay,
+      final DateTime? purchaseDay,
       final String? image,
       final bool isCheckOut,
       final bool error,
-      final String message,
-      final DateTime? purchaseDay}) = _$_AProperty;
+      final String message}) = _$_AProperty;
 
   factory _AProperty.fromJson(Map<String, dynamic> json) =
       _$_AProperty.fromJson;
@@ -532,6 +532,8 @@ abstract class _AProperty implements AProperty {
   @override
   DateTime? get updateDay;
   @override
+  DateTime? get purchaseDay;
+  @override
   String? get image;
   @override
   bool get isCheckOut;
@@ -539,8 +541,6 @@ abstract class _AProperty implements AProperty {
   bool get error;
   @override
   String get message;
-  @override
-  DateTime? get purchaseDay;
   @override
   @JsonKey(ignore: true)
   _$$_APropertyCopyWith<_$_AProperty> get copyWith =>

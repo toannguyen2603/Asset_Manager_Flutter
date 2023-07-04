@@ -34,6 +34,10 @@ class _ScannerViewState extends State<ScannerView>
     torchEnabled: false,
   );
 
+  XFile? imageFile;
+  final ImagePicker _picker = ImagePicker();
+  dynamic _pickImageError;
+
   PropertyScanner propertyController = PropertyScanner();
 
   double _zoomFactor = 0.0;
@@ -49,9 +53,7 @@ class _ScannerViewState extends State<ScannerView>
   }
 
   Future<void> onDetect(BarcodeCapture capture) async {
-    setState(() {
-      _isScannerQrCode = true;
-    });
+    isScannerQRCode(true);
     final Barcode barcode = capture.barcodes.first;
     if (barcode.rawValue == null) {
     } else {
@@ -60,45 +62,35 @@ class _ScannerViewState extends State<ScannerView>
         notifyClients(code).then(
           (state) {
             if (state) {
-              stopCamera();
-              showBannerSnackBar(
-                title: 'Mã không hợp lệ',
-                subtitle: 'Vui lòng quét mã khác',
-                context: context,
-                backgroundColor: Colors.red[700],
-                onPressed: () {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  startCamera();
-                },
-                controller: controller,
-              );
+              handleSnackBar();
             } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PropertyScreen(
-                    tag: code,
-                  ),
-                ),
-              );
+              isScannerQRCode(false);
+              navigatorController(code);
             }
           },
         );
       } else {
-        stopCamera();
-        showBannerSnackBar(
-          title: 'Mã không hợp lệ',
-          subtitle: 'Vui lòng quét mã khác',
-          context: context,
-          backgroundColor: Colors.yellow[700],
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            startCamera();
-          },
-          controller: controller,
-        );
+        handleSnackBar();
       }
     }
+  }
+
+  void handleSnackBar() {
+    stopCamera();
+    showBannerSnackBar(
+      title: 'Mã không hợp lệ',
+      subtitle: 'Vui lòng quét mã khác',
+      context: context,
+      backgroundColor: Colors.yellow[700],
+      onPressed: () {
+        isScannerQRCode(false);
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      },
+      controller: controller,
+      scannerCallback: (status) {
+        isScannerQRCode(status);
+      },
+    );
   }
 
   Future<void> startCamera() async {
@@ -117,6 +109,12 @@ class _ScannerViewState extends State<ScannerView>
     return false;
   }
 
+  void isScannerQRCode(bool status) {
+    setState(() {
+      _isScannerQrCode = status;
+    });
+  }
+
   //TODO: Check valid Qrcode
   bool _isValidQrCode(String code) {
     String codePattern = r'^[a-zA-Z0-9]{6}$';
@@ -130,12 +128,22 @@ class _ScannerViewState extends State<ScannerView>
   @override
   void initState() {
     loadData();
-    startCamera();
+    if (mounted) {
+      controller.start();
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (mounted) {
+      controller.start();
+    }
+    final scanWindow = Rect.fromCenter(
+      center: MediaQuery.of(context).size.center(Offset.zero),
+      width: 220,
+      height: 220,
+    );
     final double heightAppBar = AppBar().preferredSize.height * 1.5;
     final double widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -145,8 +153,8 @@ class _ScannerViewState extends State<ScannerView>
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               color: AColors.background,
-              child: Center(
-                child: const LoadingState.large(),
+              child: const Center(
+                child: LoadingState.large(),
               ),
             )
           : Column(
@@ -160,6 +168,7 @@ class _ScannerViewState extends State<ScannerView>
                           return ScannerErrorWidget(error: error);
                         },
                         startDelay: true,
+                        scanWindow: scanWindow,
                         onDetect: onDetect,
                       ),
                       Positioned.fill(
@@ -170,7 +179,7 @@ class _ScannerViewState extends State<ScannerView>
                                   ? Colors.yellow
                                   : Colors.white,
                               borderLength: 20,
-                              borderWidth: 8,
+                              borderWidth: 7,
                               borderRadius: 5,
                             ),
                           ),
@@ -222,7 +231,7 @@ class _ScannerViewState extends State<ScannerView>
                             ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 )
@@ -285,7 +294,6 @@ class _ScannerViewState extends State<ScannerView>
   }
 
   Future<void> navigationToProfile() async {
-    stopCamera();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -331,31 +339,43 @@ class _ScannerViewState extends State<ScannerView>
       icon: const Icon(Icons.image),
       iconSize: 32.0,
       onPressed: () async {
-        final ImagePicker picker = ImagePicker();
-        // Pick an image
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-        );
-        if (image != null) {
-          if (await controller.analyzeImage(image.path)) {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Barcode found!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          } else {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('No barcode found!'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+        await getImage(ImageSource.gallery, context: context);
+        if (imageFile != null) {
+          await controller.analyzeImage(imageFile!.path);
+        } else {
+          handleSnackBar();
         }
       },
+    );
+  }
+
+  Future<void> getImage(
+    ImageSource source, {
+    required BuildContext context,
+  }) async {
+    try {
+      final _file = await _picker.pickImage(source: source);
+      if (_file?.path != null) {
+        setState(() {
+          imageFile = _file;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
+  }
+
+  Future<void> navigatorController(String code) async {
+    controller.stop();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PropertyScreen(
+          tag: code,
+        ),
+      ),
     );
   }
 }

@@ -36,6 +36,7 @@ class _ImagePickerViewState extends State<ImagePickerView> {
       if (_file?.path != null) {
         setState(() {
           imageFile = _file;
+          widget.imageCallback(_file);
         });
       }
     } catch (e) {
@@ -100,7 +101,7 @@ class _ImagePickerViewState extends State<ImagePickerView> {
                     ),
                     child: Center(
                       child: Text(
-                        imageFile?.path.substring(150) ?? 'image',
+                        imageFile?.path.substring(100) ?? 'image',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

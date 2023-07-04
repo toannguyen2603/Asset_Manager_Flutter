@@ -20,11 +20,11 @@ class AProperty with _$AProperty {
     String? description,
     DateTime? createDay,
     DateTime? updateDay,
+    DateTime? purchaseDay,
     String? image,
     @Default(false) bool isCheckOut,
     @Default(false) bool error,
     @Default('') String message,
-    DateTime? purchaseDay,
   }) = _AProperty;
 
   factory AProperty.fromJson(Map<String, dynamic> json) =>

@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio(
-  BaseOptions(baseUrl: config.baseUrl),
-));
+      BaseOptions(baseUrl: config.baseUrl),
+    ));
 
 final propertyServiceProvider = Provider<PropertyService>(
   (ref) => PropertyService(ref.read(dioProvider)),
@@ -16,4 +16,3 @@ final propertyProvider = FutureProvider.family<AProperty, String>((ref, tag) {
   final courseRepository = ref.read(propertyServiceProvider);
   return courseRepository.getProperty(tag);
 });
-

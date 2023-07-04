@@ -3,35 +3,29 @@ import 'package:dio/dio.dart';
 
 import '../../../constaints/type_defs/type_defs.dart';
 import '../../../utils/session_manager.dart';
-import '../../property/model/aproperty.dart';
+import '../../edit/model/lsupplier.dart';
 
-class EditService {
-  final Dio _dio;
+class SupplierService {
+  final _dio = Dio();
 
-  EditService(this._dio);
   UserId? userId;
 
   SessionManager prefs = SessionManager();
 
-  Future<AProperty> editProperty(
-      Tag tag, int status, String description) async {
+  Future<LSupplier> getSupplier() async {
     await prefs.getUserId().then((value) => userId = value);
     try {
-      final response = await _dio.put(
-        config.editProperty(userId ?? '', tag),
-        data: <String, dynamic>{
-          'status': status,
-          'description': description,
-        },
+      final response = await _dio.get(
+        config.getSupplier(userId ?? ''),
       );
       if (response.statusCode == 200) {
-        var data = AProperty.fromJson(response.data);
+        var data = LSupplier.fromJson(response.data);
         return data;
       } else {
         throw Exception('An error occurred');
       }
     } on DioException catch (e) {
-      throw Exception(e.response!.data['error_description']);
+      throw Exception(e.response);
     } catch (e) {
       throw Exception("Couldn't login. Is the device online?");
     }

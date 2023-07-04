@@ -1,3 +1,4 @@
+import 'package:asset_manager_flutter/src/utils/form_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constaints/app_sizes.dart';
@@ -15,8 +16,24 @@ class DescriptionProperty extends StatefulWidget {
 }
 
 class _DescriptionAssetState extends State<DescriptionProperty> {
+  bool _isValidate = false;
+  @override
+  void dispose() {
+    widget.textarea.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.textarea.text.isEmpty) {
+      setState(() {
+        _isValidate = false;
+      });
+    } else {
+      setState(() {
+        _isValidate = true;
+      });
+    }
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -32,9 +49,12 @@ class _DescriptionAssetState extends State<DescriptionProperty> {
             controller: widget.textarea,
             keyboardType: TextInputType.multiline,
             maxLines: 10,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Enter description',
-              border: OutlineInputBorder(
+              errorText: _isValidate
+                  ? FormValidator.validateDescription(widget.textarea.text)
+                  : null,
+              border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(15),
                 ),

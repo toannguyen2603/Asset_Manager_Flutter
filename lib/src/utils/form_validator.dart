@@ -56,4 +56,12 @@ class FormValidator {
     }
     return null;
   }
+
+  static String? validateDate(String? value) {
+    return value!.isEmpty ? 'Please choose date' : null;
+  }
+
+    static String? validateDescription(String? value) {
+    return value!.isEmpty ? 'Please enter description' : null;
+  }
 }

@@ -3,35 +3,43 @@ import 'package:dio/dio.dart';
 
 import '../../../constaints/type_defs/type_defs.dart';
 import '../../../utils/session_manager.dart';
-import '../../property/model/aproperty.dart';
+import '../model/lmaintenance.dart';
 
-class EditService {
+class MaintenanceService {
   final Dio _dio;
 
-  EditService(this._dio);
+  MaintenanceService(this._dio);
   UserId? userId;
 
   SessionManager prefs = SessionManager();
 
-  Future<AProperty> editProperty(
-      Tag tag, int status, String description) async {
+  Future<LMaintenance> createMaintenance(
+    int assetID,
+    int supplierID,
+    int type,
+    String startDate,
+    String endDate,
+  ) async {
     await prefs.getUserId().then((value) => userId = value);
     try {
-      final response = await _dio.put(
-        config.editProperty(userId ?? '', tag),
+      final response = await _dio.post(
+        config.createMaintenance(userId ?? ''),
         data: <String, dynamic>{
-          'status': status,
-          'description': description,
+          'assetID': assetID,
+          'supplierID': supplierID,
+          'type': type,
+          'startDate': startDate,
+          'endDate': endDate,
         },
       );
       if (response.statusCode == 200) {
-        var data = AProperty.fromJson(response.data);
+        var data = LMaintenance.fromJson(response.data);
         return data;
       } else {
         throw Exception('An error occurred');
       }
     } on DioException catch (e) {
-      throw Exception(e.response!.data['error_description']);
+      throw Exception(e.response);
     } catch (e) {
       throw Exception("Couldn't login. Is the device online?");
     }

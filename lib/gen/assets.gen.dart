@@ -46,6 +46,8 @@ class $AssetsLottiesGen {
 
   /// File path: assets/lotties/empty.json
   String get loading => 'assets/lotties/loading.json';
+    String get success => 'assets/lotties/success.json';
+
 }
 
 class AssetGenImage {

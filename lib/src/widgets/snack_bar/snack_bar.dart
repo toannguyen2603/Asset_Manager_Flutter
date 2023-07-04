@@ -5,11 +5,14 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../gen/assets.gen.dart';
 
+typedef ScannerQRCodeCallBack = void Function(bool status);
+
 Future<void> showBannerSnackBar({
   required String title,
   required String subtitle,
   required BuildContext context,
   required MobileScannerController controller,
+  required ScannerQRCodeCallBack scannerCallback,
   VoidCallback? onPressed,
   Color? backgroundColor,
   EdgeInsets? padding,
@@ -18,13 +21,13 @@ Future<void> showBannerSnackBar({
   final snackBar = SnackBar(
     duration: Duration(days: duration),
     width: MediaQuery.of(context).size.width / 1.5,
-    padding: EdgeInsets.only(bottom: 100.0),
+    padding: const EdgeInsets.only(bottom: 100.0),
     content: Container(
       padding: const EdgeInsets.all(5),
       height: 40,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(5),
         ),
       ),
@@ -35,7 +38,7 @@ Future<void> showBannerSnackBar({
             height: 30,
             decoration: BoxDecoration(
               color: Colors.grey.shade200.withOpacity(0.7),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
             ),
@@ -52,7 +55,7 @@ Future<void> showBannerSnackBar({
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: Sizes.p12,
                     color: AColors.textColor,
                   ),
@@ -61,7 +64,7 @@ Future<void> showBannerSnackBar({
                 Spacer(),
                 Text(
                   subtitle,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AColors.textColor,
                     fontSize: Sizes.p13,
                     fontWeight: FontWeight.bold,
@@ -92,5 +95,6 @@ Future<void> showBannerSnackBar({
       .closed
       .then((value) {
     controller.start();
+    scannerCallback(false);
   });
 }
